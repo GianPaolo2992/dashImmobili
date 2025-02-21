@@ -7,7 +7,6 @@ import {NgForOf} from '@angular/common';
 import {ImmobileModel} from '../../../models/immobile.model';
 import {ImmobileDialogComponent} from '../../immobli/immobile-dialog/immobile-dialog.component';
 import { RouterLink, RouterOutlet} from '@angular/router';
-import {AnnessiFormComponent} from '../annessi-form/annessi-form.component';
 import {AnnessiUpdateFormComponent} from '../annessi-update-form/annessi-update-form.component';
 import {Subscription} from 'rxjs';
 
@@ -47,7 +46,6 @@ private subscription:Subscription = new Subscription()
     );
     this.annessiService.getAllAnnessi().subscribe()
 
-    // this.annessiService.getAllAnnessi().subscribe(data => this.listaAnnessi = data);
   }
 
   openDialogImmobile(immobile: ImmobileModel) {

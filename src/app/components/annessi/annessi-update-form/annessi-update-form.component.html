@@ -6,17 +6,10 @@
     <div>
       <label for="tipo">Tipo:</label>
       <select id="tipo" type="select" formControlName="tipo">
-        <option [ngValue]="annesso?.tipo" selected>{{ annesso?.tipo }}</option>
-        <option value="garage">Garage</option>
-        <option value="soffitta">Soffitta</option>
-        <option value="cantina">Cantina</option>
-        <option value="giardino">Giardino</option>
-        <option value="terrazzo">Terrazzo</option>
-        <option value="piscina">Piscina</option>
-        <option value="dependance">Dependance</option>
-        <option value="posto_auto">Posto Auto</option>
-        <option value="ripostiglio">Ripostiglio</option>
-        <option value="locale_tecnico">Locale Tecnico</option>
+        <option [ngValue]="annesso?.tipo" disabled selected>{{ annesso?.tipo }}</option>
+        <option *ngFor="let option of annessiOptions" [ngValue]="option.value">
+          {{ option.label }}
+        </option>
       </select>
       <div *ngIf="annessiUpdateForm.get('tipo')?.invalid ">
         Tipo è obbligatorio.
@@ -33,10 +26,10 @@
       <label for="immobileDTO">Immobile: <small>(facoltativo)</small></label>
       <select id="immobileDTO" formControlName="immobileDTO">
 
-        <option *ngIf="!immobileDTO" [ngValue]="null" selected disabled>
+        <option *ngIf="!immobileDTO" [ngValue]="null" disabled selected>
           Scegli un immobile...
         </option>
-        <option *ngIf="immobileDTO" [ngValue]="immobileDTO" selected>
+        <option *ngIf="immobileDTO" [ngValue]="immobileDTO" disabled selected>
           {{ immobileDTO.tipo }} | prop: {{ immobileDTO.proprietariDTO ? immobileDTO.proprietariDTO.cognome : 'ND' }}
         </option>
         <option [ngValue]="null">

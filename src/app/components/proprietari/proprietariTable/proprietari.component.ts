@@ -4,7 +4,6 @@ import {ProprietarioModel} from '../../../models/proprietario.model';
 import {ImmobileDialogComponent} from '../../immobli/immobile-dialog/immobile-dialog.component';
 import {ImmobileModel} from '../../../models/immobile.model';
 import {RouterLink} from '@angular/router';
-import {AnnessiUpdateFormComponent} from '../../annessi/annessi-update-form/annessi-update-form.component';
 import {ProprietarioUpdateFormComponent} from '../proprietario-update-form/proprietario-update-form.component';
 import {Subscription} from 'rxjs';
 

@@ -6,16 +6,11 @@
     <label for="tipo">Tipo:</label>
     <select id="tipo" type="select" formControlName="tipo">
       <option value="" disabled selected>Scegli un tipo...</option>
-      <option value="garage">Garage</option>
-      <option value="soffitta">Soffitta</option>
-      <option value="cantina">Cantina</option>
-      <option value="giardino">Giardino</option>
-      <option value="terrazzo">Terrazzo</option>
-      <option value="piscina">Piscina</option>
-      <option value="dependance">Dependance</option>
-      <option value="posto_auto">Posto Auto</option>
-      <option value="ripostiglio">Ripostiglio</option>
-      <option value="locale_tecnico">Locale Tecnico</option>
+
+      <option *ngFor="let option of annessiOptions" [ngValue]="option.value">
+        {{ option.label }}
+      </option>
+
     </select>
     <div *ngIf="annessiForm.get('tipo')?.invalid ">
       Tipo è obbligatorio.
@@ -36,9 +31,7 @@
         {{immobile.tipo}} | prop : {{immobile.proprietariDTO ? immobile.proprietariDTO.cognome : 'ND' }}
       </option>
     </select>
-<!--    <div *ngIf="annessiForm.get('immobileDTO')?.invalid && annessiForm.get('immobileDTO')?.touched">-->
-<!--      La password deve essere lunga almeno 6 caratteri.-->
-<!--    </div>-->
+
     </div>
   <div class="d-flex justify-content-evenly ">
     <button type="submit" [disabled]="annessiForm.invalid">iniva</button>

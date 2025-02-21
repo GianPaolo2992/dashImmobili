@@ -9,6 +9,7 @@ import {ProprietarioModel} from '../../../models/proprietario.model';
 import {AnnessoModel} from '../../../models/annesso.model';
 import {ImmobileModel} from '../../../models/immobile.model';
 import {combineLatest, forkJoin, Subscription} from 'rxjs';
+import {IMMOBILI_OPTIONS, Option} from '../../../constants/options';
 
 @Component({
   selector: 'app-immobili-form',
@@ -31,6 +32,8 @@ export class ImmobiliFormComponent implements OnInit {
   listaProprietari?: ProprietarioModel[]
   listaAnnessiNoIMMBL?: AnnessoModel[] = [];
   selectedAnnessi: AnnessoModel[] = [];
+  immobiliOptions:Option[] = IMMOBILI_OPTIONS;
+
 
   ngOnInit(): void {
     this.subscription.add(
@@ -108,4 +111,6 @@ onCheckboxChange(event: Event, annesso: AnnessoModel) {
   }
   console.log(this.selectedAnnessi);
 }
+
+
 }

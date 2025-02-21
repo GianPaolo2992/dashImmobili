@@ -6,23 +6,9 @@
     <label for="tipo">Tipo:</label>
     <select id="tipo" type="select" formControlName="tipo">
       <option value="" disabled selected>Scegli un tipo...</option>
-      <option value="appartamento">Appartamento</option>
-      <option value="villa">Villa</option>
-      <option value="casa">Casa</option>
-      <option value="attico">Attico</option>
-      <option value="villetta_a_schiera">Villetta a Schiera</option>
-      <option value="bifamiliare">Bifamiliare</option>
-      <option value="trifamiliare">Trifamiliare</option>
-      <option value="quadrifamiliare">Quadrifamiliare</option>
-      <option value="loft">Loft</option>
-      <option value="monolocale">Monolocale</option>
-      <option value="bilocale">Bilocale</option>
-      <option value="trilocale">Trilocale</option>
-      <option value="attività_commerciale">Attività Commerciale</option>
-      <option value="ufficio">Ufficio</option>
-      <option value="magazzino">Magazzino</option>
-      <option value="box_auto">Box Auto</option>
-      <option value="terreno">Terreno</option>
+      <option *ngFor="let option of immobiliOptions" [ngValue]="option.value">
+        {{ option.label }}
+      </option>
     </select>
     <div *ngIf="immobiliForm.get('tipo')?.invalid && immobiliForm.get('tipo')?.touched">
       campo è obbligatorio.
@@ -61,15 +47,7 @@
     </div>
   </div>
 
-<!--  <div>-->
-<!--    <label for="listaAnnessiDTO">Associa un annessi:<span><small> (facoltativo)</small></span></label>-->
-<!--    <select id="listaAnnessiDTO" type="select" formControlName="listaAnnessiDTO">-->
-<!--      <option *ngFor="let annesso of listaAnnessi" [value]="serializeAnnessi(annesso)">-->
-<!--        {{annesso.id}} | {{annesso.tipo}}-->
-<!--      </option>-->
-<!--    </select>-->
 
-<!--  </div>-->
   <h5>annessi Diponibili:</h5>
   <div class="row box-over-flow">
 

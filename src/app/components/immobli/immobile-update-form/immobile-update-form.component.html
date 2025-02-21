@@ -7,23 +7,10 @@
       <label for="tipo">Tipo:</label>
       <select id="tipo" type="select" formControlName="tipo">
         <option [ngValue]="immobile?.tipo" disabled selected>{{immobile?.tipo}}</option>
-        <option value="appartamento">Appartamento</option>
-        <option value="villa">Villa</option>
-        <option value="casa">Casa</option>
-        <option value="attico">Attico</option>
-        <option value="villetta_a_schiera">Villetta a Schiera</option>
-        <option value="bifamiliare">Bifamiliare</option>
-        <option value="trifamiliare">Trifamiliare</option>
-        <option value="quadrifamiliare">Quadrifamiliare</option>
-        <option value="loft">Loft</option>
-        <option value="monolocale">Monolocale</option>
-        <option value="bilocale">Bilocale</option>
-        <option value="trilocale">Trilocale</option>
-        <option value="attività_commerciale">Attività Commerciale</option>
-        <option value="ufficio">Ufficio</option>
-        <option value="magazzino">Magazzino</option>
-        <option value="box_auto">Box Auto</option>
-        <option value="terreno">Terreno</option>
+        <option *ngFor="let option of immobiliOptions" [ngValue]="option.value">
+          {{ option.label }}
+        </option>
+
       </select>
       <div *ngIf="immobiliForm.get('tipo')?.invalid && immobiliForm.get('tipo')?.touched">
         campo è obbligatorio.
@@ -84,25 +71,44 @@
       </div>
     </div>
 
-    <div>
-      <label for="proprietariDTO">Proprietario: <small>(facoltativo)</small></label>
-      <select id="proprietariDTO" formControlName="proprietariDTO">
-        <ng-container *ngIf="!oldProp">
-          <option [ngValue]="null"  selected >Scegli un Proprietario...</option>
-          <option *ngFor="let prop of listaProprietari" [ngValue]="prop">
-            {{ prop.id }} | {{ prop.nome }} {{ prop.cognome }}
-          </option>
-        </ng-container>
-        <ng-container *ngIf="oldProp">
-          <option [ngValue]="oldProp" selected >{{ oldProp.nome }} | {{ oldProp.cognome }}</option>
-          <option [ngValue]="null">nessun Proprietario</option>
-          <option *ngFor="let prop of listaProprietari" [ngValue]="prop">
-            {{ prop.id }} | {{ prop.nome }} {{ prop.cognome }}
-          </option>
-        </ng-container>
+        <div>
+          <label for="proprietariDTO">Proprietario: <small>(facoltativo)</small></label>
+          <select id="proprietariDTO" formControlName="proprietariDTO">
+            <ng-container *ngIf="!oldProp">
+              <option [ngValue]="null"  selected>
+                Scegli un Proprietario...
+              </option>
+              <option *ngFor="let prop of listaProprietari" [ngValue]="prop">
+                {{ prop.id }} | {{ prop.nome }} {{ prop.cognome }}
+              </option>
+            </ng-container>
+            <ng-container *ngIf="oldProp">
+              <option [ngValue]="oldProp" selected>
+                {{ oldProp!.nome }} | {{ oldProp!.cognome }}
+              </option>
+              <option [ngValue]="null">
+                nessun Proprietario
+              </option>
+              <option *ngFor="let prop of listaProprietari" [ngValue]="prop">
+                {{ prop.id }} | {{ prop.nome }} {{ prop.cognome }}
+              </option>
+            </ng-container>
+
+
+<!--        <option *ngIf="oldProp == undefined" [ngValue]="null" disabled selected>-->
+<!--          Scegli un Proprietario...-->
+<!--        </option>-->
+<!--        <option *ngIf="oldProp" [ngValue]="oldProp" selected>-->
+<!--          {{ oldProp.nome }} | {{ oldProp.cognome }}-->
+<!--        </option>-->
+<!--        <option [ngValue]="null">-->
+<!--          nessun Proprietario-->
+<!--        </option>-->
+<!--        <option *ngFor="let prop of listaProprietari" [ngValue]="prop">-->
+<!--          {{ prop.id }} | {{ prop.nome }} {{ prop.cognome }}-->
+<!--        </option>-->
       </select>
     </div>
-
 
     <div class="d-flex flex-row justify-content-evenly">
       <button type="submit" [disabled]="immobiliForm.invalid">iniva</button>

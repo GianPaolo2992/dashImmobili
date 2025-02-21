@@ -1,5 +1,4 @@
 import {Component, Input, ViewChild} from '@angular/core';
-import {ImmobileModel} from '../../../models/immobile.model';
 import {AnnessoModel} from '../../../models/annesso.model';
 import {NgForOf} from '@angular/common';
 

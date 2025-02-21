@@ -18,6 +18,7 @@ import {ProprietarioService} from '../../../services/proprietario.service';
 import {AnnessoService} from '../../../services/annesso.service';
 import {ProprietarioModel} from '../../../models/proprietario.model';
 import {ImmobileService} from '../../../services/immobile.service';
+import {IMMOBILI_OPTIONS, Option} from '../../../constants/options';
 
 @Component({
   selector: 'app-immobile-update-form',
@@ -38,6 +39,8 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
   private annessoService = inject(AnnessoService);
 
   private subscription: Subscription = new Subscription();
+  immobiliOptions:Option[] = IMMOBILI_OPTIONS;
+
   immobiliForm!: FormGroup;
   selectedAnnessi: AnnessoModel[] = [];
   listaProprietari?: ProprietarioModel[];
