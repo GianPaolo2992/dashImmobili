@@ -1,0 +1,42 @@
+<form [formGroup]="proprietariForm" (ngSubmit)="onSubmit()">
+  <h3 class=" text-center">crea un nuovo proprietario</h3>
+  <div>
+    <label for="nome">Nome:</label>
+    <input id="nome" class="styleInputText" type="text" formControlName="nome">
+    <div *ngIf="proprietariForm.get('nome')?.invalid && proprietariForm.get('nome')?.touched">
+      Nome è obbligatorio.
+    </div>
+  </div>
+  <div>
+    <label for="cognome">Cognome:</label>
+    <input id="cognome"  class="styleInputText" type="text" formControlName="cognome">
+    <div *ngIf="proprietariForm.get('cognome')?.invalid && proprietariForm.get('cognome')?.touched">
+      Cognome è obbligatorio.
+
+    </div>
+  </div>
+  <div>
+    <!--    <label for="listaImmobiliDTO">immobile:</label>-->
+    <!--    <select id="listaImmobiliDTO" type="select" formControlName="listaImmobiliDTO" >-->
+    <!--      <option *ngFor="let immobile of listaImmobili$ | async " [value]="serializeImmobile(immobile) " >-->
+    <!--        {{immobile.id}} | {{immobile.tipo}} |{{immobile.proprietariDTO ?immobile.proprietariDTO :'ND' }}-->
+    <!--      </option>-->
+    <!--    </select>-->
+    <h5>Immobili Diponibili:</h5>
+    <div class="row box-over-flow">
+      <div class="col-4 form-check d-flex justify-content-center align-items-center"
+           *ngFor="let immobile of listaImmobiliNOProp; let i = index">
+        <input class="form-check-input m-2" type="checkbox" [id]="'noPropCheck' + i"
+               (change)="onCheckboxChange($event, immobile)">
+        <label class="form-check-label" [for]="'noPropCheck' + i">
+          {{ immobile.tipo }}
+        </label>
+      </div>
+    </div>
+    <div class="d-flex flex-row justify-content-evenly">
+      <button type="submit" [disabled]="proprietariForm.invalid">iniva</button>
+      <button routerLink="/proprietariTable">torna alla lista proprietari</button>
+    </div>
+  </div>
+</form>
+

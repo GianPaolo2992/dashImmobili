@@ -1,0 +1,56 @@
+<dialog #dialog>
+
+  <form [formGroup]="annessiUpdateForm" (ngSubmit)="onSubmit()">
+
+    <h3 class="text-center">Modifica annesso {{ annesso?.id }}</h3>
+    <div>
+      <label for="tipo">Tipo:</label>
+      <select id="tipo" type="select" formControlName="tipo">
+        <option [ngValue]="annesso?.tipo" selected>{{ annesso?.tipo }}</option>
+        <option value="garage">Garage</option>
+        <option value="soffitta">Soffitta</option>
+        <option value="cantina">Cantina</option>
+        <option value="giardino">Giardino</option>
+        <option value="terrazzo">Terrazzo</option>
+        <option value="piscina">Piscina</option>
+        <option value="dependance">Dependance</option>
+        <option value="posto_auto">Posto Auto</option>
+        <option value="ripostiglio">Ripostiglio</option>
+        <option value="locale_tecnico">Locale Tecnico</option>
+      </select>
+      <div *ngIf="annessiUpdateForm.get('tipo')?.invalid ">
+        Tipo è obbligatorio.
+      </div>
+    </div>
+    <div>
+      <label for="superficie">Superficie:</label>
+      <input id="superficie" type="number" formControlName="superficie">
+      <div *ngIf="annessiUpdateForm.get('superficie')?.invalid && annessiUpdateForm.get('superficie')?.touched">
+        Inserisci una superficie.
+      </div>
+    </div>
+    <div>
+      <label for="immobileDTO">Immobile: <small>(facoltativo)</small></label>
+      <select id="immobileDTO" formControlName="immobileDTO">
+
+        <option *ngIf="!immobileDTO" [ngValue]="null" selected disabled>
+          Scegli un immobile...
+        </option>
+        <option *ngIf="immobileDTO" [ngValue]="immobileDTO" selected>
+          {{ immobileDTO.tipo }} | prop: {{ immobileDTO.proprietariDTO ? immobileDTO.proprietariDTO.cognome : 'ND' }}
+        </option>
+        <option [ngValue]="null">
+          nessun Immobile
+        </option>
+        <option *ngFor="let immobile of listaImmobili" [ngValue]="immobile">
+          {{ immobile.tipo }} | prop: {{ immobile.proprietariDTO ? immobile.proprietariDTO.cognome : 'ND' }}
+        </option>
+      </select>
+    </div>
+
+
+    <button type="submit" [disabled]="annessiUpdateForm.invalid">Modifica</button>
+    <button type="button" (click)="onClose()">Chiudi</button>
+  </form>
+
+</dialog>

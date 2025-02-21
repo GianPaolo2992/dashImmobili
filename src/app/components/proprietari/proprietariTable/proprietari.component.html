@@ -1,0 +1,38 @@
+<button class="btn btn-success ms-5 mt-5" routerLink="/proprietariForm"><i class="fa-solid fa-plus"></i></button>
+
+<div class="d-flex justify-content-center align-items-center flex-direction-column">
+  <table class="table table-bordered table-dark table-striped table-hover m-5">
+    <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">nome</th>
+      <th scope="col">cognome</th>
+      <th scope="col">Tot Immobili</th>
+    </tr>
+    </thead>
+    <tbody>
+      @for(prop of listProp; track prop.id){
+        <tr>
+          <th scope="row" class="d-flex justify-content-evenly">
+            <button class="btn btn-warning rounded-circle" (click)="openDialogUpdate(prop)"><i class="fa-solid fa-pen-nib" style="color: #000000;"></i></button>
+            <button class="btn btn-danger rounded-circle" (click)="deleteAnnesso(prop.id!)"><i class="fa-solid fa-trash" style="color: #000000;"></i></button>
+
+          </th>
+          <td>{{prop.nome}}</td>
+          <td>{{prop.cognome}}</td>
+          <td  (click)="openDialogImmobili(prop.listaImmobiliDTO)">
+            {{  prop.listaImmobiliDTO.length }}
+          </td>
+        </tr>
+      }
+
+    </tbody>
+  </table>
+
+</div>
+
+
+
+<app-immobile-dialog #customDialog></app-immobile-dialog>
+
+<app-proprietario-update-form [proprietario]="selectedProp"></app-proprietario-update-form>

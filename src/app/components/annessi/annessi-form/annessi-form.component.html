@@ -1,0 +1,50 @@
+<!--<dialog #dialog>-->
+
+<form [formGroup]="annessiForm" (ngSubmit)="onSubmit()">
+  <h3 class="text-center">inserisci un annesso</h3>
+  <div>
+    <label for="tipo">Tipo:</label>
+    <select id="tipo" type="select" formControlName="tipo">
+      <option value="" disabled selected>Scegli un tipo...</option>
+      <option value="garage">Garage</option>
+      <option value="soffitta">Soffitta</option>
+      <option value="cantina">Cantina</option>
+      <option value="giardino">Giardino</option>
+      <option value="terrazzo">Terrazzo</option>
+      <option value="piscina">Piscina</option>
+      <option value="dependance">Dependance</option>
+      <option value="posto_auto">Posto Auto</option>
+      <option value="ripostiglio">Ripostiglio</option>
+      <option value="locale_tecnico">Locale Tecnico</option>
+    </select>
+    <div *ngIf="annessiForm.get('tipo')?.invalid ">
+      Tipo è obbligatorio.
+    </div>
+  </div>
+  <div>
+    <label for="superficie">Superficie:</label>
+    <input id="superficie" type="number" formControlName="superficie">
+    <div *ngIf="annessiForm.get('superficie')?.invalid && annessiForm.get('superficie')?.touched">
+      Inserisci una superficie.
+    </div>
+  </div>
+  <div>
+    <label for="immobileDTO">immobile: <small> (facoltativo)</small></label>
+    <select id="immobileDTO" type="select" formControlName="immobileDTO">
+      <option [value]="null" disabled selected>Scegli un Immobile...</option>
+      <option *ngFor="let immobile of listaImmobili" [value]="serializeImmobile(immobile)">
+        {{immobile.tipo}} | prop : {{immobile.proprietariDTO ? immobile.proprietariDTO.cognome : 'ND' }}
+      </option>
+    </select>
+<!--    <div *ngIf="annessiForm.get('immobileDTO')?.invalid && annessiForm.get('immobileDTO')?.touched">-->
+<!--      La password deve essere lunga almeno 6 caratteri.-->
+<!--    </div>-->
+    </div>
+  <div class="d-flex justify-content-evenly ">
+    <button type="submit" [disabled]="annessiForm.invalid">iniva</button>
+    <button routerLink="/annessiTable">torna alla lista annessi </button>
+  </div>
+
+
+</form>
+<!--</dialog>-->

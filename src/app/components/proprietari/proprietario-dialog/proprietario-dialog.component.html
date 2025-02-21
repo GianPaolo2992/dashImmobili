@@ -1,0 +1,33 @@
+<div class="w-100 bg-dark d-flex justify-content-center align-items-center">
+  <dialog #dialog>
+    <h2>proprietario</h2>
+    <div>
+      <table class="table">
+        <thead>
+        <tr>
+          <th scope="col">id</th>
+          <th scope="col">nome</th>
+          <th scope="col">cognome</th>
+
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr >
+          <th scope="row">{{ proprietario?.id }}</th>
+          <td>{{ proprietario?.nome }}</td>
+          <td>{{ proprietario?.cognome }}</td>
+
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="container-button">
+      <button (click)="onClose(dialog)" class="btn btn-success">OK</button>
+<!--      <button (click)="onClose(dialog)" class="btn btn-danger">Cancel</button>-->
+    </div>
+  </dialog>
+</div>
+
+
+

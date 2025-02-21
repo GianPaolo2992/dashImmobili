@@ -1,0 +1,18 @@
+header{
+  width: 100%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+header div{
+  height: 90vh;
+  width: 95%;
+  background-image: url('../assets/images/agente-mano-con-casa .jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+

@@ -1,0 +1,34 @@
+
+<button class="btn btn-success mt-5 ms-5 rounded-circle border" routerLink="/annessiForm"><i class="fa-solid fa-plus"></i></button>
+<!--<button class="btn btn-success m-5" (click)="openDialogFormAnnessi()">inserisci annesso</button>-->
+<div class="d-flex justify-content-center align-items-center flex-direction-column">
+  <table class="table table-bordered table-dark table-striped table-hover m-5">
+    <thead>
+    <tr>
+      <th scope="col">azioni</th>
+      <th scope="col">tipo</th>
+      <th scope="col">superficie</th>
+      <th scope="col">immobile</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let annesso of listaAnnessi" >
+      <td  class="d-flex justify-content-evenly">
+        <button class="btn btn-warning rounded-circle" (click)="opendialogUpdate(annesso)"><i class="fa-solid fa-pen-nib" style="color: #000000;"></i></button>
+        <button class="btn btn-danger rounded-circle" (click)="deleteAnnesso(annesso.id!)"><i class="fa-solid fa-trash" style="color: #000000;"></i></button>
+
+      </td>
+      <td>{{ annesso.tipo }}</td>
+      <td>{{ annesso.superficie }}</td>
+      <td (click)="openDialogImmobile(annesso.immobileDTO!)">{{ annesso.immobileDTO?.tipo }}</td>
+    </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<app-immobile-dialog ></app-immobile-dialog>
+<app-annessi-update-form [annesso]="selectedAnnesso"></app-annessi-update-form>
+
+
+<router-outlet></router-outlet>

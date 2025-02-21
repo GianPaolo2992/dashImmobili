@@ -1,0 +1,28 @@
+  <dialog #dialog>
+    <h2>lista annessi</h2>
+    <div>
+      <table class="table">
+        <thead>
+        <tr>
+          <th scope="col">id</th>
+          <th scope="col">tipo</th>
+          <th scope="col">superficie</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let annesso of listaAnnessi">
+          <th scope="row">{{ annesso.id }}</th>
+          <td>{{ annesso.tipo }}</td>
+          <td>{{ annesso.superficie }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="container-button">
+      <button (click)="onClose(dialog)" class="btn btn-success">OK</button>
+<!--      <button (click)="onClose(dialog)" class="btn btn-danger">Cancel</button>-->
+    </div>
+  </dialog>
+
+
+
