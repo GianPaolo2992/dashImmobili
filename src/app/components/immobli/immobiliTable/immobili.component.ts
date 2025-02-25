@@ -1,7 +1,7 @@
-import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, inject, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ImmobileModel} from '../../../models/immobile.model';
 import {ImmobileService} from '../../../services/immobile.service';
-import {NgForOf} from '@angular/common';
+import {CurrencyPipe, NgForOf} from '@angular/common';
 import {ProprietarioDialogComponent} from '../../proprietari/proprietario-dialog/proprietario-dialog.component';
 import {ProprietarioModel} from '../../../models/proprietario.model';
 import {AnnessoModel} from '../../../models/annesso.model';
@@ -9,6 +9,7 @@ import {AnnessoDialogComponent} from '../../annessi/annesso-dialog/annesso-dialo
 import {RouterLink} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {ImmobileUpdateFormComponent} from '../immobile-update-form/immobile-update-form.component';
+import {SquareMeterPipe} from '../../../pipes/square-meter.pipe';
 
 @Component({
   selector: 'app-immobiliTable',
@@ -17,7 +18,9 @@ import {ImmobileUpdateFormComponent} from '../immobile-update-form/immobile-upda
     ProprietarioDialogComponent,
     AnnessoDialogComponent,
     RouterLink,
-    ImmobileUpdateFormComponent
+    ImmobileUpdateFormComponent,
+    CurrencyPipe,
+    SquareMeterPipe
   ],
   templateUrl: './immobili.component.html',
   styleUrl: './immobili.component.css'
@@ -30,12 +33,11 @@ export class ImmobiliComponent implements OnInit, OnDestroy{
   @ViewChild(ImmobileUpdateFormComponent) dialogUpdateComponent!: ImmobileUpdateFormComponent;
 
 
-  listaImmobili?: ImmobileModel[]
+
+  listaImmobili?: ImmobileModel[];
   selectedImmobile?: ImmobileModel;
 
- // ngOnInit() {
- //  this.immobileService.getAllImmobili().subscribe(data => this.listaImmobili = data);
- // }
+
   ngOnInit() {
     this.subscription.add(
       this.immobileService.getListaImmobili$().subscribe({
@@ -61,8 +63,19 @@ export class ImmobiliComponent implements OnInit, OnDestroy{
     this.selectedImmobile = immobile;
     this.dialogUpdateComponent.openDialog();
   }
-  deleteAnnesso(immobileId: number){
-    console.log('immobile deletato:' + immobileId);
+  selectImmobile(immobile: ImmobileModel) {
+    this.selectedImmobile = immobile;
+  }
+  deleteimmobile(immobileId: number){
+    this.immobileService.deleteImmobile(immobileId).subscribe({
+      next:(result) => {
+        console.log('immobile deletato:' + result);
+        this.immobileService.getAllImmobili().subscribe()
+      },
+      error: error => {
+        console.log(error);
+      }
+    })
 }
   ngOnDestroy(): void {
     if(this.subscription) {

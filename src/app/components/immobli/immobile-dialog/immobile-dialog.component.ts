@@ -1,12 +1,15 @@
 import {Component, Input, ViewChild} from '@angular/core';
 
 import {ImmobileModel} from '../../../models/immobile.model';
-import {NgForOf} from '@angular/common';
+import {CurrencyPipe, NgForOf} from '@angular/common';
+import {SquareMeterPipe} from '../../../pipes/square-meter.pipe';
 
 @Component({
   selector: 'app-immobile-dialog',
   imports: [
     NgForOf,
+    CurrencyPipe,
+    SquareMeterPipe,
 
   ],
   templateUrl: './immobile-dialog.component.html',
@@ -14,9 +17,10 @@ import {NgForOf} from '@angular/common';
 })
 export class ImmobileDialogComponent {
   @ViewChild('dialog') dialog: any;
-  @Input() listaImmobili?: ImmobileModel[] | ImmobileModel;
+  @Input() listaImmobili!: ImmobileModel[] | ImmobileModel;
 
   protected readonly Array = Array;
+
 
   openDialog() {
     const dialogElement = this.dialog.nativeElement;

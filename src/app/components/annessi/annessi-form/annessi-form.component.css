@@ -65,3 +65,15 @@ button:disabled {
   color: red;
   font-size: 0.8em;
 }
+.position-relative {
+  position: relative;
+}
+
+.euro-symbol {
+  position: absolute;
+  top: 50%;
+  right: 10px; /* Puoi regolare questa distanza in base alle tue necessità */
+  transform: translateY(-50%);
+  pointer-events: none; /* Impedisce che il simbolo interferisca con l'input */
+  font-size: 1.2em; /* Puoi regolare la dimensione del simbolo in base alle tue necessità */
+}

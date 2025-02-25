@@ -1,11 +1,13 @@
 import {Component, Input, ViewChild} from '@angular/core';
 import {AnnessoModel} from '../../../models/annesso.model';
 import {NgForOf} from '@angular/common';
+import {SquareMeterPipe} from '../../../pipes/square-meter.pipe';
 
 @Component({
   selector: 'app-annesso-dialog',
   imports: [
-    NgForOf
+    NgForOf,
+    SquareMeterPipe
   ],
   templateUrl: './annesso-dialog.component.html',
   styleUrl: './annesso-dialog.component.css'

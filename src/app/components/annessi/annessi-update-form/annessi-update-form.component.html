@@ -6,43 +6,53 @@
     <div>
       <label for="tipo">Tipo:</label>
       <select id="tipo" type="select" formControlName="tipo">
-        <option [ngValue]="annesso?.tipo" disabled selected>{{ annesso?.tipo }}</option>
-        <option *ngFor="let option of annessiOptions" [ngValue]="option.value">
+        <option [value]="annesso?.tipo" disabled selected>{{ annesso?.tipo }}</option>
+        <option *ngFor="let option of annessiOptions" [value]="option.value">
           {{ option.label }}
         </option>
       </select>
-      <div *ngIf="annessiUpdateForm.get('tipo')?.invalid ">
+      <div class="error" *ngIf="!isValid &&  annessiUpdateForm.get('tipo')?.invalid ">
         Tipo è obbligatorio.
       </div>
     </div>
     <div>
+      <!--      <label for="superficie">Superficie:</label>-->
+      <!--      <input id="superficie" type="text" formControlName="superficie" appSquareMeters>-->
+      <!--      <div *ngIf="annessiUpdateForm.get('superficie')?.invalid && annessiUpdateForm.get('superficie')?.touched">-->
+      <!--        Inserisci una superficie.-->
+      <!--      </div>-->
       <label for="superficie">Superficie:</label>
-      <input id="superficie" type="number" formControlName="superficie">
-      <div *ngIf="annessiUpdateForm.get('superficie')?.invalid && annessiUpdateForm.get('superficie')?.touched">
-        Inserisci una superficie.
+      <div class="position-relative">
+        <input id="superficie" class="styleInputText" type="number" formControlName="superficie">
+        <span class="euro-symbol">m²</span>
       </div>
+      <div class="error" *ngIf="!isValid &&  annessiUpdateForm.get('superficie')?.invalid ">
+
+        superficie è obbligatorio.
+      </div>
+
     </div>
     <div>
       <label for="immobileDTO">Immobile: <small>(facoltativo)</small></label>
       <select id="immobileDTO" formControlName="immobileDTO">
 
-        <option *ngIf="!immobileDTO" [ngValue]="null" disabled selected>
+        <option *ngIf="!immobileDTO" [value]="null" disabled selected>
           Scegli un immobile...
         </option>
-        <option *ngIf="immobileDTO" [ngValue]="immobileDTO" disabled selected>
+        <option *ngIf="immobileDTO" [value]="immobileDTO" disabled selected>
           {{ immobileDTO.tipo }} | prop: {{ immobileDTO.proprietariDTO ? immobileDTO.proprietariDTO.cognome : 'ND' }}
         </option>
-        <option [ngValue]="null">
+        <option [value]="null">
           nessun Immobile
         </option>
-        <option *ngFor="let immobile of listaImmobili" [ngValue]="immobile">
+        <option *ngFor="let immobile of listaImmobili" [value]="immobile">
           {{ immobile.tipo }} | prop: {{ immobile.proprietariDTO ? immobile.proprietariDTO.cognome : 'ND' }}
         </option>
       </select>
     </div>
 
 
-    <button type="submit" [disabled]="annessiUpdateForm.invalid">Modifica</button>
+    <button type="submit">Modifica</button>
     <button type="button" (click)="onClose()">Chiudi</button>
   </form>
 

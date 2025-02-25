@@ -2,13 +2,14 @@ import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AnnessoService} from '../../../services/annesso.service';
 import {AnnessoModel} from '../../../models/annesso.model';
 
-import {NgForOf} from '@angular/common';
+import {CurrencyPipe, NgForOf} from '@angular/common';
 
 import {ImmobileModel} from '../../../models/immobile.model';
 import {ImmobileDialogComponent} from '../../immobli/immobile-dialog/immobile-dialog.component';
 import { RouterLink, RouterOutlet} from '@angular/router';
 import {AnnessiUpdateFormComponent} from '../annessi-update-form/annessi-update-form.component';
 import {Subscription} from 'rxjs';
+import {SquareMeterPipe} from '../../../pipes/square-meter.pipe';
 
 
 
@@ -22,7 +23,8 @@ import {Subscription} from 'rxjs';
     ImmobileDialogComponent,
     RouterLink,
     RouterOutlet,
-    AnnessiUpdateFormComponent
+    AnnessiUpdateFormComponent,
+    SquareMeterPipe,
   ],
   templateUrl: './annessi.component.html',
   styleUrl: './annessi.component.css'
@@ -32,7 +34,7 @@ export class AnnessiComponent implements OnInit,OnDestroy {
   private annessiService = inject(AnnessoService);
   // listaAnnessi = this.annessiService.listaAnnessi$;
   listaAnnessi?: AnnessoModel[];
-  selectedAnnesso!: AnnessoModel;
+  selectedAnnesso?: AnnessoModel;
 private subscription:Subscription = new Subscription()
   @ViewChild(ImmobileDialogComponent) dialogComponent!: ImmobileDialogComponent;
   @ViewChild(AnnessiUpdateFormComponent) dialogUpdateFormAnnessi!: AnnessiUpdateFormComponent;
@@ -54,8 +56,12 @@ private subscription:Subscription = new Subscription()
   }
 
   opendialogUpdate(annesso: AnnessoModel) {
-    this.selectedAnnesso = annesso;
+    this.selectAnnesso(annesso)
     this.dialogUpdateFormAnnessi.openDialog();
+  }
+  selectAnnesso(annesso: AnnessoModel) {
+    this.selectedAnnesso = annesso;
+
   }
 deleteAnnesso(annessoId: number) {
     this.annessiService.deleteAnnesso(annessoId).subscribe({

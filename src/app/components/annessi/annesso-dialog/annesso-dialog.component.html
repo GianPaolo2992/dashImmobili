@@ -13,7 +13,7 @@
         <tr *ngFor="let annesso of listaAnnessi">
           <th scope="row">{{ annesso.id }}</th>
           <td>{{ annesso.tipo }}</td>
-          <td>{{ annesso.superficie }}</td>
+         <td>{{ annesso.superficie | squareMeter }}</td>
         </tr>
         </tbody>
       </table>

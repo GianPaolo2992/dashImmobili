@@ -1,4 +1,15 @@
 .active{
   background-color:darkgrey;
   color:white !important;
+  border-radius: 5px;
+}
+.logo{
+  height:100px;
+  width:115px;
+  background-image:url('https://media.istockphoto.com/id/1378442944/it/vettoriale/modelli-vettoriali-di-progettazione-di-logo-immobiliare.jpg?s=612x612&w=0&k=20&c=-nb4Uo2HMf0QxXOLikSIUlDWhxfZm9uE2Mg_-3JtGQw=');
+  background-repeat:no-repeat;
+  background-position:center !important;
+  background-size:cover !important;
+  border-radius:50% !important;
+  margin:20px ;
 }

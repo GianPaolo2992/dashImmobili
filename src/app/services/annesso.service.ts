@@ -22,6 +22,7 @@ private delete= `${this.baseUrl}/deleteAnnessi`;
     );
   }
 
+
   getListaAnnessi$(): Observable<AnnessoModel[]> {
     return this.listaAnnessi$.asObservable();
   }

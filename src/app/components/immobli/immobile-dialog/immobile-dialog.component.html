@@ -5,37 +5,32 @@
       <table class="table">
         <thead>
         <tr>
-          <th scope="col">id</th>
           <th scope="col">tipo</th>
           <th scope="col">vani</th>
           <th scope="col">costo</th>
           <th scope="col">superficie</th>
           <th scope="col">anno</th>
 
-          <th scope="col">tot annessi</th>
 
         </tr>
         </thead>
         <tbody>
           @if (Array.isArray(listaImmobili)) {
             <tr *ngFor="let immobile of listaImmobili">
-              <th scope="row">{{ immobile.id }}</th>
+
               <td>{{ immobile.tipo }}</td>
               <td>{{ immobile.vani }}</td>
-              <td>{{ immobile.costo }}</td>
-              <td>{{ immobile.superfice }}</td>
+              <td>{{ immobile.costo | currency:'EUR' }}</td>
+              <td>{{ immobile.superfice | squareMeter }}</td>
               <td>{{ immobile.anno }}</td>
-              <td>{{ immobile.listaAnnessiDTO.length }}</td>
             </tr>
           } @else {
             <tr>
-              <th scope="row">{{ listaImmobili?.id }}</th>
               <td>{{ listaImmobili?.tipo }}</td>
               <td>{{ listaImmobili?.vani }}</td>
-              <td>{{ listaImmobili?.costo }}</td>
-              <td>{{ listaImmobili?.superfice }}</td>
+              <td>{{ listaImmobili?.costo | currency:'EUR' }}</td>
+              <td>{{ listaImmobili?.superfice | squareMeter }}</td>
               <td>{{ listaImmobili?.anno }}</td>
-              <td>{{ listaImmobili?.listaAnnessiDTO?.length }}</td>
             </tr>
           }
         </tbody>
@@ -43,7 +38,7 @@
     </div>
     <div class="container-button">
       <button (click)="onClose(dialog)" class="btn btn-success">OK</button>
-      <!--      <button (click)="onClose(dialog)" class="btn btn-danger">Cancel</button>-->
+
     </div>
   </dialog>
 </div>

@@ -1,15 +1,17 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from "@angular/common";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {ImmobileService} from '../../../services/immobile.service';
 import {ProprietarioService} from '../../../services/proprietario.service';
 import {AnnessoService} from '../../../services/annesso.service';
 import {ProprietarioModel} from '../../../models/proprietario.model';
 import {AnnessoModel} from '../../../models/annesso.model';
 import {ImmobileModel} from '../../../models/immobile.model';
-import {combineLatest, forkJoin, Subscription} from 'rxjs';
+import {combineLatest, Subscription} from 'rxjs';
 import {IMMOBILI_OPTIONS, Option} from '../../../constants/options';
+import {SquareMetersDirective} from '../../../directives/square-meters.directive';
+import {EuroDirective} from '../../../directives/euro.directive';
 
 @Component({
   selector: 'app-immobili-form',
@@ -17,7 +19,8 @@ import {IMMOBILI_OPTIONS, Option} from '../../../constants/options';
     NgForOf,
     NgIf,
     ReactiveFormsModule,
-    RouterLink
+    RouterLink,
+
   ],
   templateUrl: './immobili-form.component.html',
   styleUrl: './immobili-form.component.css'
@@ -28,12 +31,16 @@ export class ImmobiliFormComponent implements OnInit {
   private annessoService = inject(AnnessoService);
   private fb = inject(FormBuilder)
   private subscription: Subscription = new Subscription();
+
+  private router = inject(Router);
+
+
   immobiliForm!: FormGroup;
   listaProprietari?: ProprietarioModel[]
   listaAnnessiNoIMMBL?: AnnessoModel[] = [];
   selectedAnnessi: AnnessoModel[] = [];
-  immobiliOptions:Option[] = IMMOBILI_OPTIONS;
-
+  immobiliOptions: Option[] = IMMOBILI_OPTIONS;
+  isValid = true;
 
   ngOnInit(): void {
     this.subscription.add(
@@ -51,9 +58,7 @@ export class ImmobiliFormComponent implements OnInit {
       })
     );
     this.proprietarioService.getAllProprietari().subscribe();
-      this.annessoService.getAllAnnessi().subscribe();
-
-
+    this.annessoService.getAllAnnessi().subscribe();
 
 
     this.immobiliForm = this.fb.group({
@@ -76,41 +81,50 @@ export class ImmobiliFormComponent implements OnInit {
     return JSON.stringify(ann);
   }
 
-  onSubmit() {
-    const immobile: ImmobileModel = {
-      tipo: this.immobiliForm.get('tipo')?.value,
-      vani: this.immobiliForm.get('vani')?.value,
-      costo: this.immobiliForm.get('costo')?.value,
-      superfice: this.immobiliForm.get('superfice')?.value,
-      anno: this.immobiliForm.get('anno')?.value,
-      proprietariDTO: JSON.parse(this.immobiliForm.get('proprietariDTO')?.value),
-      listaAnnessiDTO: this.selectedAnnessi!,
+  onCheckboxChange(event: Event, annesso: AnnessoModel) {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.selectedAnnessi.push(annesso);
+    } else {
+      this.selectedAnnessi = this.selectedAnnessi.filter((a: AnnessoModel) => a.id !== annesso.id);
     }
-    console.log(immobile);
-    this.immobileService.insertImmobile(immobile).subscribe({
-      next: (nextData: ImmobileModel) => {
-        console.log('Success' + nextData);
-        // this.immobiliForm.reset();
-        this.ngOnInit();
-      },
-      error: (err) => {
-        console.log(err);
+    console.log(this.selectedAnnessi);
+  }
+
+
+  onSubmit() {
+    const costoValue = this.immobiliForm.get('costo')?.value;
+    const superficieValue = this.immobiliForm.get('superfice')?.value;
+    if (this.immobiliForm.valid) {
+
+      const immobile: ImmobileModel = {
+        tipo: this.immobiliForm.get('tipo')?.value,
+        vani: this.immobiliForm.get('vani')?.value,
+        costo: this.immobiliForm.get('costo')?.value,
+        superfice: this.immobiliForm.get('superfice')?.value,
+        // costo: costoValue ? parseFloat(costoValue.replace(/[^0-9.]/g, '')) : 0,
+        // superfice: superficieValue ? parseFloat(superficieValue.replace(/[^0-9.]/g, '')) : 0,
+        anno: this.immobiliForm.get('anno')?.value,
+        proprietariDTO: JSON.parse(this.immobiliForm.get('proprietariDTO')?.value),
+        listaAnnessiDTO: this.selectedAnnessi!,
       }
+      console.log(immobile);
+      this.immobileService.insertImmobile(immobile).subscribe({
+        next: (nextData: ImmobileModel) => {
+          console.log('Success' + nextData);
+          this.immobiliForm.reset();
+          this.router.navigate(['/immobiliTable']);
+        },
+        error: (err) => {
+          console.log(err);
+        }
 
-    })
+      })
+    } else {
+      console.log('form non valido')
+      this.isValid = false
+    }
   }
-
-
-
-onCheckboxChange(event: Event, annesso: AnnessoModel) {
-  const checkbox = event.target as HTMLInputElement;
-  if (checkbox.checked) {
-    this.selectedAnnessi.push(annesso);
-  } else {
-    this.selectedAnnessi = this.selectedAnnessi.filter((a: AnnessoModel) => a.id !== annesso.id);
-  }
-  console.log(this.selectedAnnessi);
-}
 
 
 }

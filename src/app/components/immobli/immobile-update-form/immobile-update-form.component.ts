@@ -19,6 +19,8 @@ import {AnnessoService} from '../../../services/annesso.service';
 import {ProprietarioModel} from '../../../models/proprietario.model';
 import {ImmobileService} from '../../../services/immobile.service';
 import {IMMOBILI_OPTIONS, Option} from '../../../constants/options';
+import {SquareMetersDirective} from '../../../directives/square-meters.directive';
+import {EuroDirective} from '../../../directives/euro.directive';
 
 @Component({
   selector: 'app-immobile-update-form',
@@ -26,6 +28,7 @@ import {IMMOBILI_OPTIONS, Option} from '../../../constants/options';
     NgForOf,
     NgIf,
     ReactiveFormsModule,
+
   ],
   templateUrl: './immobile-update-form.component.html',
   styleUrl: './immobile-update-form.component.css'
@@ -39,7 +42,7 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
   private annessoService = inject(AnnessoService);
 
   private subscription: Subscription = new Subscription();
-  immobiliOptions:Option[] = IMMOBILI_OPTIONS;
+  immobiliOptions: Option[] = IMMOBILI_OPTIONS;
 
   immobiliForm!: FormGroup;
   selectedAnnessi: AnnessoModel[] = [];
@@ -48,6 +51,7 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
   listaAnnessiNoIMMBL?: AnnessoModel[];
   oldProp?: ProprietarioModel;
 
+  isValid = true;
 
   openDialog() {
     const dialogElement = this.dialog?.nativeElement;
@@ -125,33 +129,45 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
   }
 
 
-
   onSubmit() {
-    const IMMOBILE: ImmobileModel = {
-      id: this.immobile!.id,
-      tipo: this.immobiliForm.get('tipo')?.value,
-      vani: this.immobiliForm.get('vani')?.value,
-      costo: this.immobiliForm.get('costo')?.value,
-      superfice: this.immobiliForm.get('superfice')?.value,
-      anno: this.immobiliForm.get('anno')?.value,
-      proprietariDTO: this.immobiliForm.get('proprietariDTO')!.value,
-      listaAnnessiDTO: this.selectedAnnessi
+    // const superficieValue = this.immobiliForm.get('superfice')?.value.replace(/[^0-9]/g, '');
+    // const costoValue =  this.immobiliForm.get('costo')?.value.replace(/[^0-9]/g, '');
+    if (this.immobiliForm.valid) {
 
-    }
-    console.log(JSON.stringify(IMMOBILE));
-    this.immobileService.updateImmobile(IMMOBILE).subscribe({
-      next: (result) => {
-        console.log('success', result);
-        this.onClose()
-        this.immobileService.getAllImmobili().subscribe();
-        this.proprietarioService.getAllProprietari().subscribe();
-        this.annessoService.getAllAnnessi().subscribe()
-      },
-      error: error => {
-        console.log('error', error);
+      const proprietariValue = this.immobiliForm.get('proprietariDTO')!.value;
+      const proprietariDTO = proprietariValue ? (typeof proprietariValue === 'string' ? JSON.parse(proprietariValue) : proprietariValue) : null;
+
+      const IMMOBILE: ImmobileModel = {
+        id: this.immobile!.id,
+        tipo: this.immobiliForm.get('tipo')?.value,
+        vani: this.immobiliForm.get('vani')?.value,
+        costo: this.immobiliForm.get('costo')?.value,
+        superfice: this.immobiliForm.get('superfice')?.value,
+        // costo: costoValue ? parseFloat(costoValue.replace(/[^0-9.]/g, '')) : 0,
+        // superfice: superficieValue ? parseFloat(superficieValue.replace(/[^0-9.]/g, '')) : 0,
+        anno: this.immobiliForm.get('anno')?.value,
+        proprietariDTO: proprietariDTO,
+        listaAnnessiDTO: this.selectedAnnessi
+
       }
-    });
-
+      console.log(JSON.stringify(IMMOBILE));
+      this.immobileService.updateImmobile(IMMOBILE).subscribe({
+        next: (result) => {
+          console.log('success', result);
+          this.onClose()
+          this.immobileService.getAllImmobili().subscribe();
+          this.proprietarioService.getAllProprietari().subscribe();
+          this.annessoService.getAllAnnessi().subscribe()
+        },
+        error: error => {
+          console.log('error', error);
+        }
+      });
+    } else {
+      //   messaggio di invalidita del form
+      console.log('error form non valido');
+      this.isValid = false;
+    }
   }
 
   onClose() {

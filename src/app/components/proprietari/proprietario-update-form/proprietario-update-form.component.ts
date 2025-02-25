@@ -155,6 +155,7 @@ export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnCha
   listaImmobile?: ImmobileModel[];// getAll immobili
   listaImmobiliNOProp?: ImmobileModel[];  //filtrato per proprietari null
   selectedImmobili: ImmobileModel[] = []; // proprietà per tenere traccia degli immobili selezionati
+  isValid = true
   private subscription: Subscription = new Subscription();
   private immobileService = inject(ImmobileService);
   private proprietarioService = inject(ProprietarioService);
@@ -167,7 +168,7 @@ export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnCha
           this.listaImmobile = data;
           this.listaImmobiliNOProp = this.listaImmobile.filter((i: ImmobileModel) => !i.proprietariDTO);
         },
-        error: (error) =>{
+        error: (error) => {
           console.log(error);
         }
       })
@@ -205,28 +206,34 @@ export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnCha
   }
 
 
-
   onSubmit() {
-    const proprietario: ProprietarioModel = {
-      id: this.proprietario!.id,
-      nome: this.propUpdateForm.get('nome')?.value,
-      cognome: this.propUpdateForm.get('cognome')?.value,
-      listaImmobiliDTO: this.selectedImmobili
-    };
-    console.log('submit proprietario' + JSON.stringify(proprietario));
-    this.proprietarioService.updateProp(proprietario).subscribe({
-      next:(result) => {
-        console.log('proprietario', result);
-        this.onClose()
-        this.proprietarioService.getAllProprietari().subscribe()
-        this.immobileService.getAllImmobili().subscribe();
+    if (this.propUpdateForm.valid) {
 
-      },
-      error: error => {
-        console.log('Errore durante l\'aggiornamento:', error);
-      }
-    })
+      const proprietario: ProprietarioModel = {
+        id: this.proprietario!.id,
+        nome: this.propUpdateForm.get('nome')?.value,
+        cognome: this.propUpdateForm.get('cognome')?.value,
+        listaImmobiliDTO: this.selectedImmobili
+      };
+      console.log('submit proprietario' + JSON.stringify(proprietario));
+      this.proprietarioService.updateProp(proprietario).subscribe({
+        next: (result) => {
+          console.log('proprietario', result);
+          this.onClose()
+          this.proprietarioService.getAllProprietari().subscribe()
+          this.immobileService.getAllImmobili().subscribe();
+
+        },
+        error: error => {
+          console.log('Errore durante l\'aggiornamento:', error);
+        }
+      })
+    } else {
+      console.log('form non valido')
+      this.isValid = false
+    }
   }
+
   openDialog() {
     const dialogElement = this.dialog?.nativeElement;
     dialogElement?.show();

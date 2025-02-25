@@ -14,16 +14,41 @@
     <tr *ngFor="let annesso of listaAnnessi" >
       <td  class="d-flex justify-content-evenly">
         <button class="btn btn-warning rounded-circle" (click)="opendialogUpdate(annesso)"><i class="fa-solid fa-pen-nib" style="color: #000000;"></i></button>
-        <button class="btn btn-danger rounded-circle" (click)="deleteAnnesso(annesso.id!)"><i class="fa-solid fa-trash" style="color: #000000;"></i></button>
+        <button class="btn btn-danger rounded-circle" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="selectAnnesso(annesso)"><i class="fa-solid fa-trash" style="color: #000000;"></i></button>
+
 
       </td>
       <td>{{ annesso.tipo }}</td>
-      <td>{{ annesso.superficie }}</td>
+      <td>{{ annesso.superficie | squareMeter }}</td>
       <td (click)="openDialogImmobile(annesso.immobileDTO!)">{{ annesso.immobileDTO?.tipo }}</td>
     </tr>
 
     </tbody>
   </table>
+</div>
+<!--modale di conferma delete -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-dark">
+        confermi di voler eliminare questo annesso?
+        <ul>
+          <p class="m-0 mt-3"><small >tipo</small></p>
+          <li>{{selectedAnnesso?.tipo}}</li>
+          <p class="m-0 mt-3"><small>superficie</small></p>
+          <li>{{selectedAnnesso?.superficie ? selectedAnnesso!.superficie : 0 | squareMeter}}</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteAnnesso(selectedAnnesso?.id!)">Elimina</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <app-immobile-dialog ></app-immobile-dialog>

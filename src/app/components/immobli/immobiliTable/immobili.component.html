@@ -19,12 +19,14 @@
   <tr *ngFor="let immobile of listaImmobili" >
     <th scope="row" class="d-flex justify-content-evenly">
       <button class="btn btn-warning rounded-circle" (click)="openDialogUpdate(immobile)"><i class="fa-solid fa-pen-nib" style="color: #000000;"></i></button>
-      <button class="btn btn-danger rounded-circle" (click)="deleteAnnesso(immobile.id!)"><i class="fa-solid fa-trash" style="color: #000000;"></i></button>
+      <button class="btn btn-danger rounded-circle" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="selectImmobile(immobile)"><i class="fa-solid fa-trash" style="color: #000000;"></i></button>
+
+
     </th>
     <td>{{ immobile.tipo }}</td>
     <td>{{ immobile.vani }}</td>
-    <td>{{ immobile.costo }}</td>
-    <td>{{ immobile.superfice }}</td>
+    <td>{{ immobile.costo | currency:'EUR' }}</td>
+    <td>{{ immobile.superfice | squareMeter }}</td>
     <td>{{ immobile.anno }}</td>
     <td (click)="openDialogProp(immobile.proprietariDTO)">{{ immobile.proprietariDTO ?  immobile.proprietariDTO.nome + ' ' + immobile.proprietariDTO.cognome : 'ND'}}</td>
     <td (click)="openDialogAnnessi( immobile.listaAnnessiDTO)">{{ immobile.listaAnnessiDTO.length }}</td>
@@ -33,6 +35,38 @@
   </tbody>
 </table>
 </div>
+<!--modaledi conferma delete-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-dark">
+        Confermi di voler eliminare l' immobile?
+        <ul>
+          <p class="m-0 mt-3"><small >tipo</small></p>
+          <li>{{selectedImmobile?.tipo}}</li>
+          <p class="m-0 mt-3"><small>vani</small></p>
+          <li>{{selectedImmobile?.vani}}</li>
+          <p class="m-0 mt-3"><small>costo</small></p>
+          <li>{{selectedImmobile?.costo|currency:'EUR'}}</li>
+          <p class="m-0 mt-3"><small>superficie</small></p>
+          <li>{{selectedImmobile?.superfice ?selectedImmobile!.superfice : 0 | squareMeter}}</li>
+          <p class="m-0 mt-3"><small>anno costruzione</small></p>
+          <li>{{selectedImmobile?.anno}}</li>
+        </ul>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteimmobile(selectedImmobile!.id!)">Elimina</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <app-proprietario-dialog ></app-proprietario-dialog>
 <app-annesso-dialog ></app-annesso-dialog>
 <app-immobile-update-form [immobile]="selectedImmobile"></app-immobile-update-form>

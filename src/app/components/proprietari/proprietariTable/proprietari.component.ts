@@ -6,6 +6,7 @@ import {ImmobileModel} from '../../../models/immobile.model';
 import {RouterLink} from '@angular/router';
 import {ProprietarioUpdateFormComponent} from '../proprietario-update-form/proprietario-update-form.component';
 import {Subscription} from 'rxjs';
+import {SquareMeterPipe} from '../../../pipes/square-meter.pipe';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class ProprietariComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   listProp?: ProprietarioModel[];
-  selectedProp!: ProprietarioModel;
+  selectedProp?: ProprietarioModel;
 
 
   @ViewChild(ImmobileDialogComponent) modalComponent!: ImmobileDialogComponent;
@@ -57,15 +58,20 @@ export class ProprietariComponent implements OnInit, OnDestroy {
   }
 
   openDialogUpdate(proprietario: ProprietarioModel) {
-    this.selectedProp = proprietario;
+    this.selectProp(proprietario)
     this.dialogUpdateForm.openDialog();
   }
-
-  deleteAnnesso(id: number) {
+selectProp(proprietario: ProprietarioModel) {
+    this.selectedProp = proprietario;
+}
+  deleteProp(id: number) {
     this.proprietarioService.deleteProp(id).subscribe({
       next: (result) => {
         console.log('proprietario elinìminato:' + result);
         this.proprietarioService.getAllProprietari().subscribe()
+      },
+      error: (error) =>{
+        console.log(error);
       }
     })
   }

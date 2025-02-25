@@ -7,6 +7,7 @@ import {ImmobileModel} from '../../../models/immobile.model';
 import {Subscription} from 'rxjs';
 import {ImmobileService} from '../../../services/immobile.service';
 import {ANNESSI_OPTIONS, Option} from '../../../constants/options';
+import {SquareMetersDirective} from '../../../directives/square-meters.directive';
 
 
 @Component({
@@ -15,7 +16,8 @@ import {ANNESSI_OPTIONS, Option} from '../../../constants/options';
     // AsyncPipe,
     NgForOf,
     NgIf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SquareMetersDirective
   ],
   templateUrl: './annessi-update-form.component.html',
   styleUrl: './annessi-update-form.component.css'
@@ -29,7 +31,7 @@ export class AnnessiUpdateFormComponent implements OnInit, OnChanges, OnDestroy 
   annessiOptions: Option[] = ANNESSI_OPTIONS;
   listaImmobili?: ImmobileModel[];
   immobileDTO?: ImmobileModel;
-
+isValid = true;
   private subscription: Subscription = new Subscription();
 
   constructor(private fb: FormBuilder, private annessoService: AnnessoService, private immobileService: ImmobileService) {
@@ -82,25 +84,36 @@ export class AnnessiUpdateFormComponent implements OnInit, OnChanges, OnDestroy 
   // } //???
 
   onSubmit() {
-    const AnnessoUpdated: AnnessoModel = {
-      id: this.annesso!.id,
-      tipo: this.annessiUpdateForm.get('tipo')!.value,
-      superficie: this.annessiUpdateForm.get('superficie')!.value,
-      immobileDTO: this.annessiUpdateForm.get('immobileDTO')!.value
-    }
-    this.annessoService.updateAnnesso(AnnessoUpdated).subscribe({
-      next: data => {
-        console.log(JSON.stringify(data));
-        this.onClose()
-        this.annessoService.getAllAnnessi().subscribe();
-        this.immobileService.getAllImmobili().subscribe();
-      },
-      error: error => {
-        console.log('Errore durante l\'aggiornamento:', error);
-
+    if (this.annessiUpdateForm.valid) {
+      const AnnessoUpdated: AnnessoModel = {
+        id: this.annesso!.id,
+        tipo: this.annessiUpdateForm.get('tipo')!.value,
+        superficie: this.annessiUpdateForm.get('superficie')!.value,
+        // superficie:  this.annessiUpdateForm.get('superficie')?.value.replace(/[^0-9.]/g, ''),
+        immobileDTO: this.annessiUpdateForm.get('immobileDTO')!.value
       }
-    })
+
+      this.annessoService.updateAnnesso(AnnessoUpdated).subscribe({
+        next: data => {
+          console.log(JSON.stringify(data));
+          this.annessiUpdateForm.reset()
+          this.onClose()
+
+          this.annessoService.getAllAnnessi().subscribe();
+          this.immobileService.getAllImmobili().subscribe();
+        },
+        error: error => {
+          console.log('Errore durante l\'aggiornamento:', error);
+
+        }
+      })
+    }
+    else {
+ this.isValid = false;
+    }
   }
+
+
 
   onClose() {
     const dialogElement = this.dialog?.nativeElement;

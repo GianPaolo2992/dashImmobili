@@ -6,13 +6,13 @@
     <div>
       <label for="tipo">Tipo:</label>
       <select id="tipo" type="select" formControlName="tipo">
-        <option [ngValue]="immobile?.tipo" disabled selected>{{immobile?.tipo}}</option>
-        <option *ngFor="let option of immobiliOptions" [ngValue]="option.value">
+        <option [ngValue]="immobile?.tipo" disabled selected>{{ immobile?.tipo }}</option>
+        <option class="error" *ngFor="let option of immobiliOptions" [ngValue]="option.value">
           {{ option.label }}
         </option>
 
       </select>
-      <div *ngIf="immobiliForm.get('tipo')?.invalid && immobiliForm.get('tipo')?.touched">
+      <div class="error" *ngIf="!isValid &&  immobiliForm.get('tipo')?.invalid ">
         campo è obbligatorio.
       </div>
     </div>
@@ -20,23 +20,34 @@
     <div>
       <label for="vani">Vani:</label>
       <input id="vani" class="styleInputText" type="number" formControlName="vani">
-      <div *ngIf="immobiliForm.get('vani')?.invalid && immobiliForm.get('vani')?.touched">
+      <div class="error" *ngIf="!isValid &&  immobiliForm.get('vani')?.invalid ">
         campo è obbligatorio min 1 vano.
       </div>
     </div>
 
     <div>
       <label for="costo">Costo:</label>
-      <input id="costo" class="styleInputText" type="number" formControlName="costo">
-      <div *ngIf="immobiliForm.get('costo')?.invalid && immobiliForm.get('costo')?.touched">
+      <div class="position-relative">
+        <input id="costo" class="styleInputText" type="number" formControlName="costo">
+        <span class="euro-symbol">€ </span>
+      </div>
+      <div class="error" *ngIf="!isValid &&  immobiliForm.get('costo')?.invalid ">
         campo è obbligatorio.
       </div>
     </div>
 
     <div>
+      <!--      <label for="superfice">Superficie:</label>-->
+      <!--      <input id="superfice" class="styleInputText" type="text" formControlName="superfice" appSquareMeters>-->
+      <!--      <div *ngIf="immobiliForm.get('superfice')?.invalid && immobiliForm.get('superfice')?.touched">-->
+      <!--        campo è obbligatorio.-->
+      <!--      </div>-->
       <label for="superfice">Superficie:</label>
-      <input id="superfice" class="styleInputText" type="number" formControlName="superfice">
-      <div *ngIf="immobiliForm.get('superfice')?.invalid && immobiliForm.get('superfice')?.touched">
+      <div class="position-relative">
+        <input id="superfice" class="styleInputText" type="number" formControlName="superfice">
+        <span class="euro-symbol">m²</span>
+      </div>
+      <div class="error" *ngIf="!isValid &&  immobiliForm.get('superfice')?.invalid ">
         campo è obbligatorio.
       </div>
     </div>
@@ -44,75 +55,81 @@
     <div>
       <label for="anno">anno di costruzione:</label>
       <input id="anno" class="styleInputText" type="number" formControlName="anno">
-      <div *ngIf="immobiliForm.get('anno')?.invalid && immobiliForm.get('anno')?.touched">
+      <div class="error" *ngIf="!isValid &&  immobiliForm.get('anno')?.invalid">
         campo è obbligatorio.
       </div>
     </div>
-    <h5>annessi Diponibili:</h5>
-    <div class="row box-over-flow">
-      <div class="col-4 form-check d-flex justify-content-center align-items-center"
-           *ngFor="let annesso of listaAnnessiNoIMMBL; let i = index">
-        <input class="form-check-input m-2" type="checkbox" [id]="'noPropCheck' + i"
-               (change)="onCheckboxChange($event, annesso)">
-        <label class="form-check-label" [for]="'noPropCheck' + i">
-          {{ annesso.tipo }} | mq: {{ annesso.superficie }}
-        </label>
+    <label>annessi Diponibili:</label>
+    <div class=" d-flex justify-content-center align-items-center">
+      <div class="row box-over-flow">
+        <div class="col-4 form-check d-flex justify-content-center align-items-center"
+             *ngFor="let annesso of listaAnnessiNoIMMBL; let i = index">
+          <input class="form-check-input m-2" type="checkbox" [id]="'noPropCheck' + i"
+                 (change)="onCheckboxChange($event, annesso)">
+          <label class="form-check-label" [for]="'noPropCheck' + i">
+            {{ annesso.tipo }} | mq: {{ annesso.superficie }}
+          </label>
+        </div>
       </div>
     </div>
-    <h5>annessi di {{ immobile?.proprietariDTO?.nome }} {{ immobile?.proprietariDTO?.cognome }}:</h5>
-    <div class="row box-over-flow">
-      <div class="col-4 form-check d-flex justify-content-center align-items-center"
-           *ngFor="let annesso of immobile?.listaAnnessiDTO; let i = index">
-        <input class="form-check-input me-2" type="checkbox" [id]="'noPropCheck' + i" [checked]="true"
-               (change)="onCheckboxChange($event, annesso)">
-        <label class="form-check-label" [for]="'noPropCheck' + i">
-          {{ annesso.tipo }} | mq: {{ annesso.superficie }}
-        </label>
+    <label>annessi di {{ immobile?.proprietariDTO?.nome }} {{ immobile?.proprietariDTO?.cognome }}:</label>
+    <div class=" d-flex justify-content-center align-items-center">
+      <div class="row box-over-flow">
+        <div class="col-4 form-check d-flex justify-content-center align-items-center"
+             *ngFor="let annesso of immobile?.listaAnnessiDTO; let i = index">
+          <input class="form-check-input me-2" type="checkbox" [id]="'noPropCheck' + i" [checked]="true"
+                 (change)="onCheckboxChange($event, annesso)">
+          <label class="form-check-label" [for]="'noPropCheck' + i">
+            {{ annesso.tipo }} | mq: {{ annesso.superficie }}
+          </label>
+        </div>
       </div>
     </div>
 
-        <div>
-          <label for="proprietariDTO">Proprietario: <small>(facoltativo)</small></label>
-          <select id="proprietariDTO" formControlName="proprietariDTO">
-            <ng-container *ngIf="!oldProp">
-              <option [ngValue]="null"  selected>
-                Scegli un Proprietario...
-              </option>
-              <option *ngFor="let prop of listaProprietari" [ngValue]="prop">
-                {{ prop.id }} | {{ prop.nome }} {{ prop.cognome }}
-              </option>
-            </ng-container>
-            <ng-container *ngIf="oldProp">
-              <option [ngValue]="oldProp" selected>
-                {{ oldProp!.nome }} | {{ oldProp!.cognome }}
-              </option>
-              <option [ngValue]="null">
-                nessun Proprietario
-              </option>
-              <option *ngFor="let prop of listaProprietari" [ngValue]="prop">
-                {{ prop.id }} | {{ prop.nome }} {{ prop.cognome }}
-              </option>
-            </ng-container>
+    <div>
+      <label for="proprietariDTO">Proprietario: <small>(facoltativo)</small></label>
+      <select id="proprietariDTO" formControlName="proprietariDTO">
+
+        <ng-container *ngIf="!oldProp">
+          <option value="" selected disabled hidden>
+            Scegli un Proprietario...
+          </option>
+          <option *ngFor="let prop of listaProprietari" [value]="serializeProprietario(prop)">
+            {{ prop.id }} | {{ prop.nome }} {{ prop.cognome }}
+          </option>
+        </ng-container>
+
+        <ng-container *ngIf="oldProp">
+          <option [value]="oldProp" selected>
+            {{ oldProp!.nome }} | {{ oldProp!.cognome }}
+          </option>
+          <option value="">
+            nessun Proprietario
+          </option>
+          <option *ngFor="let prop of listaProprietari" [value]="serializeProprietario(prop)">
+            {{ prop.id }} | {{ prop.nome }} {{ prop.cognome }}
+          </option>
+        </ng-container>
 
 
-<!--        <option *ngIf="oldProp == undefined" [ngValue]="null" disabled selected>-->
-<!--          Scegli un Proprietario...-->
-<!--        </option>-->
-<!--        <option *ngIf="oldProp" [ngValue]="oldProp" selected>-->
-<!--          {{ oldProp.nome }} | {{ oldProp.cognome }}-->
-<!--        </option>-->
-<!--        <option [ngValue]="null">-->
-<!--          nessun Proprietario-->
-<!--        </option>-->
-<!--        <option *ngFor="let prop of listaProprietari" [ngValue]="prop">-->
-<!--          {{ prop.id }} | {{ prop.nome }} {{ prop.cognome }}-->
-<!--        </option>-->
+        <!--        <option *ngIf="oldProp == undefined" [ngValue]="null" disabled selected>-->
+        <!--          Scegli un Proprietario...-->
+        <!--        </option>-->
+        <!--        <option *ngIf="oldProp" [ngValue]="oldProp" selected>-->
+        <!--          {{ oldProp.nome }} | {{ oldProp.cognome }}-->
+        <!--        </option>-->
+        <!--        <option [ngValue]="null">-->
+        <!--          nessun Proprietario-->
+        <!--        </option>-->
+        <!--        <option *ngFor="let prop of listaProprietari" [ngValue]="prop">-->
+        <!--          {{ prop.id }} | {{ prop.nome }} {{ prop.cognome }}-->
+        <!--        </option>-->
       </select>
     </div>
 
     <div class="d-flex flex-row justify-content-evenly">
-      <button type="submit" [disabled]="immobiliForm.invalid">iniva</button>
-      <button type="button" (click)="onClose()">Chiudi </button>
+      <button type="submit">iniva</button>
+      <button type="button" (click)="onClose()">Chiudi</button>
     </div>
 
   </form>

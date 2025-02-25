@@ -2,14 +2,11 @@ import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {ProprietarioService} from '../../../services/proprietario.service';
 import {ImmobileService} from '../../../services/immobile.service';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { NgForOf, NgIf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {ImmobileModel} from '../../../models/immobile.model';
 import {ProprietarioModel} from '../../../models/proprietario.model';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {BehaviorSubject, Subscription} from 'rxjs';
-
-
-
 
 
 @Component({
@@ -26,17 +23,17 @@ import {BehaviorSubject, Subscription} from 'rxjs';
 export class ProprietariFormComponent implements OnInit, OnDestroy {
   private proprietarioService = inject(ProprietarioService);
   private immobileService = inject(ImmobileService);
-  private fb =  inject(FormBuilder);
+  private fb = inject(FormBuilder);
 
   proprietariForm!: FormGroup;
   listaImmobiliNOProp?: ImmobileModel[];
 
   listaImmobili$ = new BehaviorSubject<ImmobileModel[]>([]);
-  selectedImmobili: ImmobileModel[]=[];
-
+  selectedImmobili: ImmobileModel[] = [];
+isValid:boolean = true
 
   private subscription = new Subscription();
-
+  private router = inject(Router);
 
 
   ngOnInit(): void {
@@ -45,16 +42,12 @@ export class ProprietariFormComponent implements OnInit, OnDestroy {
         next: (data: ImmobileModel[]) => {
           this.listaImmobiliNOProp = data.filter((i: ImmobileModel) => !i.proprietariDTO);
         },
-        error: (error) =>{
+        error: (error) => {
           console.log(error);
         }
       })
     );
     this.immobileService.getAllImmobili().subscribe();
-// this.immobileService.getAllImmobili().subscribe(allimmobili => {
-//         this.listaImmobili = allimmobili.filter(immobili => immobili.proprietariDTO === undefined)
-//         console.log(this.listaImmobili);
-//       })
     this.proprietariForm = this.fb.group({
       nome: ['', Validators.required],
       cognome: ['', Validators.required],
@@ -62,16 +55,26 @@ export class ProprietariFormComponent implements OnInit, OnDestroy {
     })
 
 
-
     console.log(this.listaImmobili$);
   }
 
-  serializeImmobile(immobile: ImmobileModel){
+  serializeImmobile(immobile: ImmobileModel) {
     return JSON.stringify(immobile);
   }
 
+  onCheckboxChange(event: Event, immobile: ImmobileModel) {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.selectedImmobili.push(immobile);
+    } else {
+      this.selectedImmobili = this.selectedImmobili.filter((i: ImmobileModel) => i.id !== immobile.id);
+    }
+    console.log(this.selectedImmobili);
+  }
 
   onSubmit() {
+    if(this.proprietariForm.valid){
+
     const proprietario: ProprietarioModel = {
       nome: this.proprietariForm.get('nome')?.value,
       cognome: this.proprietariForm.get('cognome')?.value,
@@ -83,25 +86,24 @@ export class ProprietariFormComponent implements OnInit, OnDestroy {
     this.proprietarioService.insertProp(proprietario).subscribe({
       next: (data) => {
         console.log('Success' + data);
-        this.immobileService.getAllImmobili().subscribe();
+        // this.immobileService.getAllImmobili().subscribe();
+        this.proprietariForm.reset()
+        this.router.navigate(['/proprietariTable']);
+
       },
       error: (error) => {
         console.log('Error' + error);
       }
     });
-  }
-  onCheckboxChange(event: Event, immobile: ImmobileModel) {
-    const checkbox = event.target as HTMLInputElement;
-    if (checkbox.checked) {
-      this.selectedImmobili.push(immobile);
-    } else {
-      this.selectedImmobili = this.selectedImmobili.filter((i: ImmobileModel) => i.id !== immobile.id);
     }
-    console.log(this.selectedImmobili);
+    else{
+      this.isValid = false;
+    }
   }
 
+
   ngOnDestroy(): void {
-    if(this.subscription){
+    if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
