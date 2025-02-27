@@ -1,4 +1,4 @@
-import {Component, inject, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ImmobileModel} from '../../../models/immobile.model';
 import {ImmobileService} from '../../../services/immobile.service';
 import {CurrencyPipe, NgForOf} from '@angular/common';
@@ -10,6 +10,8 @@ import {RouterLink} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {ImmobileUpdateFormComponent} from '../immobile-update-form/immobile-update-form.component';
 import {SquareMeterPipe} from '../../../pipes/square-meter.pipe';
+import {AnnessoService} from '../../../services/annesso.service';
+import {ProprietarioService} from '../../../services/proprietario.service';
 
 @Component({
   selector: 'app-immobiliTable',
@@ -27,6 +29,8 @@ import {SquareMeterPipe} from '../../../pipes/square-meter.pipe';
 })
 export class ImmobiliComponent implements OnInit, OnDestroy{
   private immobileService = inject(ImmobileService);
+  private proprietarioService = inject(ProprietarioService);
+  private annessoService = inject(AnnessoService);
   private subscription: Subscription = new Subscription();
   @ViewChild(ProprietarioDialogComponent) dialogPropComponent!: ProprietarioDialogComponent;
   @ViewChild(AnnessoDialogComponent) dialogAnnesiComponent!: AnnessoDialogComponent;
@@ -48,8 +52,14 @@ export class ImmobiliComponent implements OnInit, OnDestroy{
 
       })
     );
-    this.immobileService.getAllImmobili().subscribe();
+    this.refreshData()
   }
+  refreshData() {
+    this.immobileService.getAllImmobili().subscribe();
+    this.proprietarioService.getAllProprietari().subscribe();
+    this.annessoService.getAllAnnessi().subscribe();
+  }
+
 
   openDialogProp(proprietario: ProprietarioModel | null) {
    this.dialogPropComponent.proprietario = proprietario;
@@ -69,8 +79,8 @@ export class ImmobiliComponent implements OnInit, OnDestroy{
   deleteimmobile(immobileId: number){
     this.immobileService.deleteImmobile(immobileId).subscribe({
       next:(result) => {
-        console.log('immobile deletato:' + result);
-        this.immobileService.getAllImmobili().subscribe()
+        console.log('immobile deletato:' + JSON.stringify(result));
+        this.refreshData()
       },
       error: error => {
         console.log(error);

@@ -18,7 +18,7 @@ import {SquareMetersDirective} from '../../../directives/square-meters.directive
     ReactiveFormsModule,
     NgForOf,
     RouterLink,
-    SquareMetersDirective,
+
   ],
   templateUrl: './annessi-form.component.html',
   styleUrl: './annessi-form.component.css'

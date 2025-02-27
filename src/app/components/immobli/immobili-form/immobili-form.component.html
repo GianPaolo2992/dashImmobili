@@ -61,29 +61,46 @@
       campo è obbligatorio.
     </div>
   </div>
-
-
-  <label>annessi Diponibili:</label>
-  <div class=" d-flex justify-content-center align-items-center">
-    <div class="row box-over-flow">
-
-      @if (listaAnnessiNoIMMBL!.length > 0) {
-        <div class="col-4 form-check d-flex justify-content-center align-items-center"
-             *ngFor="let annesso of listaAnnessiNoIMMBL; let i = index">
-          <input class="form-check-input m-2" type="checkbox" [id]="'noPropCheck' + i"
-                 (change)="onCheckboxChange($event, annesso)">
-          <label class="form-check-label" [for]="'noPropCheck' + i">
-            {{ annesso.tipo }} | mq: {{ annesso.superficie }}
-          </label>
-        </div>
-      } @else {
-        <label class="form-check-label">
-          Nessun Annesso Libero
-        </label>
-      }
-
+  <label>Annessi Disponibili:</label>
+  <div class="d-flex justify-content-center align-items-center">
+    <div class="row box ">
+      <div class="col-12">
+        <ng-multiselect-dropdown class="my-custom-multiselect-dropdown"
+          [settings]="dropdownSettings"
+          [data]="listaAnnessiNoIMMBL"
+        formControlName="listaAnnessiDTO"
+          (onSelect)="onItemSelect($event)"
+          (onDeSelect)="onItemDeSelect($event)"
+          (onSelectAll)="onSelectAll($event)">
+        </ng-multiselect-dropdown>
+      </div>
     </div>
+
   </div>
+
+
+
+<!--  <label>annessi Diponibili:</label>-->
+<!--  <div class=" d-flex justify-content-center align-items-center">-->
+<!--    <div class="row box-over-flow">-->
+
+<!--      @if (listaAnnessiNoIMMBL!.length > 0) {-->
+<!--        <div class="col-4 form-check d-flex justify-content-center align-items-center"-->
+<!--             *ngFor="let annesso of listaAnnessiNoIMMBL; let i = index">-->
+<!--          <input class="form-check-input m-2" type="checkbox" [id]="'noPropCheck' + i"-->
+<!--                 (change)="onCheckboxChange($event, annesso)">-->
+<!--          <label class="form-check-label" [for]="'noPropCheck' + i">-->
+<!--            {{ annesso.tipo }} | mq: {{ annesso.superficie }}-->
+<!--          </label>-->
+<!--        </div>-->
+<!--      } @else {-->
+<!--        <label class="form-check-label">-->
+<!--          Nessun Annesso Libero-->
+<!--        </label>-->
+<!--      }-->
+
+<!--    </div>-->
+<!--  </div>-->
 
 
 

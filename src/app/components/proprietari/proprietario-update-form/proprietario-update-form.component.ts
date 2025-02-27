@@ -1,127 +1,4 @@
-// import {
-//   Component,
-//   ElementRef, Inject,
-//   inject,
-//   Input,
-//   OnChanges,
-//   OnDestroy,
-//   OnInit,
-//   SimpleChanges,
-//   ViewChild
-// } from '@angular/core';
-// import {ProprietarioModel} from '../../../models/proprietario.model';
-// import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-// import {ImmobileModel} from '../../../models/immobile.model';
-// import {Subscription} from 'rxjs';
-// import {ImmobileService} from '../../../services/immobile.service';
-// import {NgForOf, NgIf} from '@angular/common';
-//
-// @Component({
-//   selector: 'app-proprietario-update-form',
-//   imports: [
-//     // NgForOf,
-//     NgIf,
-//     ReactiveFormsModule,
-//     NgForOf
-//   ],
-//   templateUrl: './proprietario-update-form.component.html',
-//   styleUrl: './proprietario-update-form.component.css'
-// })
-// export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnChanges {
-//
-//   @Input() proprietario!: ProprietarioModel;
-//
-//   @ViewChild('dialog') dialog?: ElementRef<HTMLDialogElement>;
-//
-//   propUpdateForm!: FormGroup;
-//
-//    listaImmobile?: ImmobileModel[];
-//    listaImmobiliNOProp?: ImmobileModel[];
-//   private subscription: Subscription = new Subscription();
-//   private immobileService = inject(ImmobileService)
-//   private fb = inject(FormBuilder)
-//
-//   ngOnInit(): void {
-//     this.subscription.add(
-//       this.immobileService.getListaImmobili$().subscribe({
-//           next: (data:ImmobileModel[]) => {
-//             this.listaImmobile = data
-//             this.listaImmobiliNOProp = this.listaImmobile.filter((i: ImmobileModel) => !i.proprietariDTO);
-//             // console.log('lista immobili senza proprietario' + JSON.stringify(this.listaImmobiliNOProp));
-//
-//           //  this.listaImmobiliNOProp =  this.listaImmobile.filter((i: ImmobileModel) => {
-//           //      i.proprietariDTO.listaImmobiliDTO.some(
-//           //       (immobile: ImmobileModel) => immobile.id === null
-//           //     );
-//           //
-//           //   })
-//           //   console.log('lista immobili proprietario' + JSON.stringify(this.listaImmobiliNOProp))
-//           }
-//         }
-//       )
-//     )
-//     this.immobileService.getAllImmobili().subscribe()
-//     this.propUpdateForm = this.fb.group({
-//       nome: ['', Validators.required],
-//       cognome: ['', Validators.required],
-//       listaImmobiliDTO: [null],
-//
-//     })
-//
-//   }
-//
-//   ngOnChanges(changes: SimpleChanges): void {
-//     if (changes['proprietario'] && this.proprietario) {
-//       this.propUpdateForm.patchValue({
-//         id: this.proprietario.id,
-//         nome: this.proprietario.nome,
-//         cognome: this.proprietario.cognome,
-//         listaImmobileDTO:this.proprietario.listaImmobiliDTO
-//       });
-//     }
-//   }
-//
-//   openDialog() {
-//     const dialogElement = this.dialog?.nativeElement;
-//     dialogElement?.show();
-//
-//     setTimeout(() => {
-//       dialogElement!.style.opacity = '1';
-//       dialogElement!.style.transform = 'scale(1)';
-//     }, 500);
-//   }
-//
-//   onSubmit() {
-// const proprietario: ProprietarioModel = {
-//   id: this.proprietario.id,
-//   nome:this.propUpdateForm.get('nome')?.value,
-//   cognome:this.propUpdateForm.get('cognome')?.value,
-//   // listaImmobiliDTO: this.proprietario.listaImmobiliDTO,
-//   listaImmobiliDTO:this.propUpdateForm.get('listaImmobiliDTO')?.value,
-//
-// }
-// console.log('submit proprietario' + JSON.stringify(proprietario));
-// console.log('submit proprietario' + JSON.stringify(proprietario.listaImmobiliDTO));
-//
-//   }
-//
-//   onClose() {
-//     const dialogElement = this.dialog?.nativeElement;
-//     dialogElement!.style.opacity = '0';
-//     dialogElement!.style.transform = 'scale(0.7)';
-//     setTimeout(() => {
-//       dialogElement!.close();
-//     }, 500); // Durata della transizione
-//   }
-//   Log(immobile: ImmobileModel) {
-//     console.log(immobile);
-//   }
-//
-//   ngOnDestroy(): void {
-//   }
-//
-//
-// }
+
 import {
   Component,
   ElementRef,
@@ -131,30 +8,41 @@ import {
   OnDestroy,
   OnInit,
   SimpleChanges,
-  ViewChild
+  ViewChild, ViewEncapsulation
 } from '@angular/core';
 import {ProprietarioModel} from '../../../models/proprietario.model';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ImmobileModel} from '../../../models/immobile.model';
 import {Subscription} from 'rxjs';
 import {ImmobileService} from '../../../services/immobile.service';
-import {NgForOf, NgIf} from '@angular/common';
+import {CommonModule, NgIf} from '@angular/common';
 import {ProprietarioService} from '../../../services/proprietario.service';
+import {IDropdownSettings, NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
 
 @Component({
   selector: 'app-proprietario-update-form',
-  imports: [NgIf, ReactiveFormsModule, NgForOf],
+  imports: [
+    NgIf,
+    ReactiveFormsModule,
+    CommonModule,
+    FormsModule,
+    NgMultiSelectDropDownModule,
+  ],
   templateUrl: './proprietario-update-form.component.html',
-  styleUrl: './proprietario-update-form.component.css'
+  styleUrl: './proprietario-update-form.component.css',
+  encapsulation: ViewEncapsulation.None // Disabilita l'incapsulamento degli stili
 })
 export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() proprietario?: ProprietarioModel;
   @ViewChild('dialog') dialog?: ElementRef<HTMLDialogElement>;
   propUpdateForm!: FormGroup;
-  listaImmobile?: ImmobileModel[];// getAll immobili
-  listaImmobiliNOProp?: ImmobileModel[];  //filtrato per proprietari null
+  listaImmobile?: ImmobileModel[]; // getAll immobili
+  listaImmobiliUnica: ImmobileModel[] = [];  // filtrato per proprietari null
+  // listaImmobiliNOProp: ImmobileModel[] = [];  // filtrato per proprietari null
   selectedImmobili: ImmobileModel[] = []; // proprietà per tenere traccia degli immobili selezionati
+  dropdownSettings: IDropdownSettings = {};
+
   isValid = true
   private subscription: Subscription = new Subscription();
   private immobileService = inject(ImmobileService);
@@ -165,8 +53,22 @@ export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnCha
     this.subscription.add(
       this.immobileService.getListaImmobili$().subscribe({
         next: (data: ImmobileModel[]) => {
+          console.log('data' + data);
+
           this.listaImmobile = data;
-          this.listaImmobiliNOProp = this.listaImmobile.filter((i: ImmobileModel) => !i.proprietariDTO);
+          console.log('lista immobili ' + this.listaImmobile);
+          this.listaImmobiliUnica= this.listaImmobile
+          this.listaImmobiliUnica= this.listaImmobile.filter(immobile => !immobile.proprietariDTO || immobile.proprietariDTO.id === this.proprietario?.id);
+          // console.log('immobili filtrati:', this.listaImmobiliUnica);
+
+          if(this.proprietario){
+            this.selectedImmobili = this.listaImmobiliUnica.filter(immobile => immobile.proprietariDTO && immobile.proprietariDTO.id === this.proprietario?.id);
+            // this.listaImmobiliNOProp = this.listaImmobile.filter((i: ImmobileModel) => !i.proprietariDTO);
+            console.log('immobili selezionati:', this.selectedImmobili);
+
+            this.patchForm();
+          }
+
         },
         error: (error) => {
           console.log(error);
@@ -179,36 +81,92 @@ export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnCha
       cognome: ['', Validators.required],
       listaImmobiliDTO: [null]
     });
+    this.dropdownSettings = {
+      idField: 'id',
+      textField: 'tipo',
+      enableCheckAll: true,
+      selectAllText: 'Seleziona Tutti',
+      unSelectAllText: 'Deseleziona Tutti',
+      allowSearchFilter: true,
+      noDataAvailablePlaceholderText: 'Nessun dato disponibile',
+    };
   }
+  patchForm(): void {
+    if (this.proprietario) {
+      this.selectedImmobili= this.listaImmobiliUnica
+        .filter(imm => imm.proprietariDTO && imm.proprietariDTO.id === this.proprietario?.id);
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['proprietario'] && this.proprietario) {
       this.propUpdateForm.patchValue({
         id: this.proprietario.id,
         nome: this.proprietario.nome,
         cognome: this.proprietario.cognome,
-        listaImmobileDTO: this.proprietario.listaImmobiliDTO
-      });
+        listaImmobiliDTO: this.selectedImmobili,
 
-      // Aggiungi gli immobili del proprietario alla lista di immobili selezionati
-      this.selectedImmobili = [...this.proprietario.listaImmobiliDTO];
+      });
+    }
+    console.log(this.propUpdateForm.get('listaImmobiliDTO')?.value);
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['proprietario'] && this.proprietario) {
+      // this.propUpdateForm.patchValue({
+      //   id: this.proprietario.id,
+      //   nome: this.proprietario.nome,
+      //   cognome: this.proprietario.cognome,
+      //   // listaImmobiliDTO: this.proprietario.listaImmobiliDTO
+      // });
+      //
+      // // Aggiungi gli immobili del proprietario alla lista di immobili selezionati
+      // // this.selectedImmobili = [...this.proprietario.listaImmobiliDTO];
+      // this.selectedImmobili = this.listaImmobiliUnica
+      //   .filter(immobile => immobile.proprietariDTO && immobile.proprietariDTO.id === this.proprietario?.id);
+      //
+      // // this.propUpdateForm.get('listaImmobiliDTO')?.setValue(this.selectedImmobili);
+      //
+      // this.propUpdateForm.patchValue({
+      //   listaImmobiliDTO: this.selectedImmobili
+      // })
+      this.patchForm();
     }
   }
 
-  onCheckboxChange(event: Event, immobile: ImmobileModel) {
-    const checkbox = event.target as HTMLInputElement;
-    if (checkbox.checked) {
-      this.selectedImmobili.push(immobile);
-    } else {
-      this.selectedImmobili = this.selectedImmobili.filter((i: ImmobileModel) => i.id !== immobile.id);
+  onItemSelect(item: any) {
+    this.selectedImmobili = this.propUpdateForm.get('listaImmobiliDTO')?.value || [];
+
+    // Controlla se l'elemento è già presente nell'array
+    if (!this.selectedImmobili.some((immobile: ImmobileModel) => immobile.id === item.id)) {
+      this.selectedImmobili.push(item);
     }
+
+    this.propUpdateForm.get('listaImmobiliDTO')?.setValue(this.selectedImmobili);
     console.log(this.selectedImmobili);
   }
 
+  onSelectAll(items: any[]) {
+    this.selectedImmobili = items;
+
+    // Filtra duplicati
+    // items.forEach((item: ImmobileModel) => {
+    //   if (!this.selectedImmobili.some((immobile: ImmobileModel) => immobile.id === item.id)) {
+    //     this.selectedImmobili.push(item);
+    //   }
+    // });
+
+    this.propUpdateForm.get('listaImmobiliDTO')?.setValue(this.selectedImmobili);
+    console.log(this.selectedImmobili);
+  }
+
+  onItemDeSelect(item: any) {
+    // this.selectedImmobili = this.propUpdateForm.get('listaImmobiliDTO')?.value || [];
+    //rimuove
+    this.selectedImmobili = this.selectedImmobili
+      .filter((immobile: ImmobileModel) => immobile.id !== item.id);
+
+    this.propUpdateForm.get('listaImmobiliDTO')?.setValue(this.selectedImmobili);
+    console.log(this.selectedImmobili);
+  }
 
   onSubmit() {
     if (this.propUpdateForm.valid) {
-
       const proprietario: ProprietarioModel = {
         id: this.proprietario!.id,
         nome: this.propUpdateForm.get('nome')?.value,
@@ -222,7 +180,6 @@ export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnCha
           this.onClose()
           this.proprietarioService.getAllProprietari().subscribe()
           this.immobileService.getAllImmobili().subscribe();
-
         },
         error: error => {
           console.log('Errore durante l\'aggiornamento:', error);
@@ -249,7 +206,7 @@ export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnCha
     dialogElement!.style.transform = 'scale(0.7)';
     setTimeout(() => {
       dialogElement!.close();
-    }, 500); // Durata della transizione
+    }, 500);
   }
 
   ngOnDestroy(): void {

@@ -17,7 +17,7 @@ import {SquareMeterPipe} from '../../../pipes/square-meter.pipe';
 })
 export class ImmobileDialogComponent {
   @ViewChild('dialog') dialog: any;
-  @Input() listaImmobili!: ImmobileModel[] | ImmobileModel;
+  @Input() listaImmobili?: ImmobileModel[] | ImmobileModel;
 
   protected readonly Array = Array;
 

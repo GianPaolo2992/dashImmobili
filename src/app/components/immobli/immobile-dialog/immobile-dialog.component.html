@@ -5,6 +5,7 @@
       <table class="table">
         <thead>
         <tr>
+          <th scope="col">id</th>
           <th scope="col">tipo</th>
           <th scope="col">vani</th>
           <th scope="col">costo</th>
@@ -18,6 +19,7 @@
           @if (Array.isArray(listaImmobili)) {
             <tr *ngFor="let immobile of listaImmobili">
 
+              <td>{{ immobile.id }}</td>
               <td>{{ immobile.tipo }}</td>
               <td>{{ immobile.vani }}</td>
               <td>{{ immobile.costo | currency:'EUR' }}</td>
@@ -26,6 +28,7 @@
             </tr>
           } @else {
             <tr>
+              <td>{{ listaImmobili?.id }}</td>
               <td>{{ listaImmobili?.tipo }}</td>
               <td>{{ listaImmobili?.vani }}</td>
               <td>{{ listaImmobili?.costo | currency:'EUR' }}</td>

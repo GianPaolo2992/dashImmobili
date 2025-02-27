@@ -7,11 +7,11 @@ import {
   OnDestroy,
   OnInit,
   SimpleChanges,
-  ViewChild
+  ViewChild, ViewEncapsulation
 } from '@angular/core';
 import {ImmobileModel} from '../../../models/immobile.model';
-import {NgForOf, NgIf} from '@angular/common';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {CommonModule, NgForOf, NgIf} from '@angular/common';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AnnessoModel} from '../../../models/annesso.model';
 import {combineLatest, Subscription} from 'rxjs';
 import {ProprietarioService} from '../../../services/proprietario.service';
@@ -19,8 +19,8 @@ import {AnnessoService} from '../../../services/annesso.service';
 import {ProprietarioModel} from '../../../models/proprietario.model';
 import {ImmobileService} from '../../../services/immobile.service';
 import {IMMOBILI_OPTIONS, Option} from '../../../constants/options';
-import {SquareMetersDirective} from '../../../directives/square-meters.directive';
-import {EuroDirective} from '../../../directives/euro.directive';
+
+import {IDropdownSettings, NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
 
 @Component({
   selector: 'app-immobile-update-form',
@@ -28,10 +28,13 @@ import {EuroDirective} from '../../../directives/euro.directive';
     NgForOf,
     NgIf,
     ReactiveFormsModule,
-
+    CommonModule,
+    FormsModule,
+    NgMultiSelectDropDownModule,
   ],
   templateUrl: './immobile-update-form.component.html',
-  styleUrl: './immobile-update-form.component.css'
+  styleUrl: './immobile-update-form.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges {
   @Input() immobile?: ImmobileModel;
@@ -47,10 +50,13 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
   immobiliForm!: FormGroup;
   selectedAnnessi: AnnessoModel[] = [];
   listaProprietari?: ProprietarioModel[];
-  listaAnnessi?: AnnessoModel[];
-  listaAnnessiNoIMMBL?: AnnessoModel[];
-  oldProp?: ProprietarioModel;
 
+  listaAnnessi: AnnessoModel[] = [];
+
+  listaAnnessiUnica: AnnessoModel[] = [];  // Array unico per tutti gli annessi
+
+  oldProp?: ProprietarioModel;
+  dropdownSettings: IDropdownSettings = {};
   isValid = true;
 
   openDialog() {
@@ -70,58 +76,86 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
       ]).subscribe({
         next: ([props, allAnnessi]) => {
           this.listaProprietari = props;
-          this.listaAnnessi = allAnnessi.filter(annesso => annesso.immobileDTO === this.immobile);
-          this.listaAnnessiNoIMMBL = allAnnessi.filter(annesso => annesso.immobileDTO === undefined);
+          this.listaAnnessiUnica = allAnnessi;
+          if (this.immobile) {
+
+            this.oldProp = this.immobile.proprietariDTO;
+            this.selectedAnnessi = this.listaAnnessiUnica
+              .filter(annesso => annesso.immobileDTO && annesso.immobileDTO.id === this.immobile?.id);
+            this.patchForm();
+          }
         },
         error: error => {
           console.log('error', error);
         }
       })
     );
-    console.log(this.listaAnnessiNoIMMBL);
-    this.proprietarioService.getAllProprietari().subscribe();
-    this.annessoService.getAllAnnessi().subscribe();
+    this.refreshData();
     this.immobiliForm = this.fb.group({
       tipo: ['', Validators.required],
       vani: [0, Validators.required],
       costo: [0, Validators.required],
       superfice: [0, Validators.required],
       anno: [0, Validators.required],
-      proprietariDTO: [null], //this.oldProp, //inizializzato null
+      proprietariDTO: [null],
       listaAnnessiDTO: [null],
-    })
+    });
+    this.dropdownSettings = {
+      idField: 'id',
+      textField: 'tipo',
+      enableCheckAll: true,
+      selectAllText: 'Seleziona Tutti',
+      unSelectAllText: 'Deseleziona Tutti',
+      allowSearchFilter: true,
+      noDataAvailablePlaceholderText: 'Nessun dato disponibile',
+    };
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['immobile'] && this.immobile) {
+  patchForm(): void {
+    if (this.immobile) {
+      this.selectedAnnessi = this.listaAnnessiUnica
+        .filter(annesso => annesso.immobileDTO && annesso.immobileDTO.id === this.immobile?.id);
+
       this.immobiliForm.patchValue({
         id: this.immobile.id,
         tipo: this.immobile.tipo,
         vani: this.immobile.vani,
         costo: this.immobile.costo,
         superfice: this.immobile.superfice,
-        anno: this.immobile.anno!,
-        proprietariDTO: this.immobile.proprietariDTO,
-        listaAnnessiDTO: this.immobile.listaAnnessiDTO,
-
+        anno: this.immobile.anno,
+        proprietariDTO: this.oldProp ? JSON.stringify(this.oldProp) : null,  // Controllo oldProp e serializzazione
+        listaAnnessiDTO: this.selectedAnnessi,
       });
-      console.log(JSON.stringify(this.immobiliForm.get('proprietariDTO')?.value));
-      // Aggiungi gli immobili del proprietario alla lista di immobili selezionati
-      this.oldProp = this.immobile.proprietariDTO;
-
-      this.selectedAnnessi = [...this.immobile.listaAnnessiDTO];
     }
+    console.log(this.oldProp);
   }
 
-  onCheckboxChange(event: Event, annesso: AnnessoModel) {
-    const checkbox = event.target as HTMLInputElement;
-    if (checkbox.checked) {
-      this.selectedAnnessi.push(annesso);
-    } else {
-      this.selectedAnnessi = this.selectedAnnessi.filter((a: AnnessoModel) => a.id !== annesso.id);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['immobile'] && this.immobile) {
+      this.patchForm();
     }
+  }
+  onItemSelect(item: any) {
+    if (!this.selectedAnnessi.some(annesso => annesso.id === item.id)) {
+      this.selectedAnnessi.push(item);
+    }
+    this.immobiliForm.get('listaAnnessiDTO')?.setValue(this.selectedAnnessi);
     console.log(this.selectedAnnessi);
   }
+
+  onItemDeSelect(item: any) {
+    this.selectedAnnessi = this.selectedAnnessi
+      .filter(annesso => annesso.id !== item.id);
+    this.immobiliForm.get('listaAnnessiDTO')?.setValue(this.selectedAnnessi);
+    console.log(this.selectedAnnessi);
+  }
+
+  onSelectAll(items: any[]) {
+    this.selectedAnnessi = items;
+    this.immobiliForm.get('listaAnnessiDTO')?.setValue(this.selectedAnnessi);
+    console.log(this.selectedAnnessi);
+  }
+
 
   serializeProprietario(prop: ProprietarioModel) {
     return JSON.stringify(prop);
@@ -134,8 +168,8 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
     // const costoValue =  this.immobiliForm.get('costo')?.value.replace(/[^0-9]/g, '');
     if (this.immobiliForm.valid) {
 
-      const proprietariValue = this.immobiliForm.get('proprietariDTO')!.value;
-      const proprietariDTO = proprietariValue ? (typeof proprietariValue === 'string' ? JSON.parse(proprietariValue) : proprietariValue) : null;
+
+
 
       const IMMOBILE: ImmobileModel = {
         id: this.immobile!.id,
@@ -146,7 +180,7 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
         // costo: costoValue ? parseFloat(costoValue.replace(/[^0-9.]/g, '')) : 0,
         // superfice: superficieValue ? parseFloat(superficieValue.replace(/[^0-9.]/g, '')) : 0,
         anno: this.immobiliForm.get('anno')?.value,
-        proprietariDTO: proprietariDTO,
+        proprietariDTO:this.immobiliForm.get('proprietariDTO')?.value? JSON.parse(this.immobiliForm.get('proprietariDTO')?.value): null,
         listaAnnessiDTO: this.selectedAnnessi
 
       }
@@ -155,9 +189,7 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
         next: (result) => {
           console.log('success', result);
           this.onClose()
-          this.immobileService.getAllImmobili().subscribe();
-          this.proprietarioService.getAllProprietari().subscribe();
-          this.annessoService.getAllAnnessi().subscribe()
+          this.refreshData()
         },
         error: error => {
           console.log('error', error);
@@ -168,6 +200,12 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
       console.log('error form non valido');
       this.isValid = false;
     }
+  }
+
+  refreshData(): void {
+    this.immobileService.getAllImmobili().subscribe();
+    this.proprietarioService.getAllProprietari().subscribe();
+    this.annessoService.getAllAnnessi().subscribe()
   }
 
   onClose() {
@@ -185,5 +223,5 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
     }
   }
 
-
 }
+
