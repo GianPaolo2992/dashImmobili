@@ -12,7 +12,8 @@ dialog[open] {
   opacity: 1; /* Visibile quando aperto */
   transform: scale(1); /* Dimensione normale quando aperto */
 }
-.container-button{
+
+.container-button {
   padding: 10px;
   display: flex;
   flex-direction: row;
@@ -20,7 +21,8 @@ dialog[open] {
   align-items: center;
   gap: 10px;
 }
+
 .opacity-30 {
-  opacity:  0.3 !important;
+  opacity: 0.3 !important;
 
 }

@@ -1,4 +1,3 @@
-
 import {
   Component,
   ElementRef,
@@ -36,51 +35,41 @@ export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnCha
 
   @Input() proprietario?: ProprietarioModel;
   @ViewChild('dialog') dialog?: ElementRef<HTMLDialogElement>;
-  propUpdateForm!: FormGroup;
-  listaImmobile?: ImmobileModel[]; // getAll immobili
-  listaImmobiliUnica: ImmobileModel[] = [];  // filtrato per proprietari null
-  // listaImmobiliNOProp: ImmobileModel[] = [];  // filtrato per proprietari null
-  selectedImmobili: ImmobileModel[] = []; // proprietà per tenere traccia degli immobili selezionati
-  dropdownSettings: IDropdownSettings = {};
 
-  isValid = true
   private subscription: Subscription = new Subscription();
   private immobileService = inject(ImmobileService);
   private proprietarioService = inject(ProprietarioService);
   private fb = inject(FormBuilder);
 
+
+  propUpdateForm!: FormGroup;
+  listaImmobile: ImmobileModel[] = []; // getAll immobili
+  listaImmobiliUnica: ImmobileModel[] = [];  // filtrato per proprietari null
+  selectedImmobili: ImmobileModel[] = []; // proprietà per tenere traccia degli immobili selezionati
+  dropdownSettings: IDropdownSettings = {};
+  isValid = true
+
+
   ngOnInit(): void {
     this.subscription.add(
       this.immobileService.getListaImmobili$().subscribe({
         next: (data: ImmobileModel[]) => {
-          console.log('data' + data);
-
-          this.listaImmobile = data;
-          console.log('lista immobili ' + this.listaImmobile);
-          this.listaImmobiliUnica= this.listaImmobile
-          this.listaImmobiliUnica= this.listaImmobile.filter(immobile => !immobile.proprietariDTO || immobile.proprietariDTO.id === this.proprietario?.id);
-          // console.log('immobili filtrati:', this.listaImmobiliUnica);
-
-          if(this.proprietario){
-            this.selectedImmobili = this.listaImmobiliUnica.filter(immobile => immobile.proprietariDTO && immobile.proprietariDTO.id === this.proprietario?.id);
-            // this.listaImmobiliNOProp = this.listaImmobile.filter((i: ImmobileModel) => !i.proprietariDTO);
-            console.log('immobili selezionati:', this.selectedImmobili);
-
-            this.patchForm();
-          }
-
+          this.listaImmobile = data
         },
         error: (error) => {
           console.log(error);
         }
       })
     );
+
     this.immobileService.getAllImmobili().subscribe();
+
     this.propUpdateForm = this.fb.group({
       nome: ['', Validators.required],
       cognome: ['', Validators.required],
       listaImmobiliDTO: [null]
     });
+
     this.dropdownSettings = {
       idField: 'id',
       textField: 'tipo',
@@ -90,12 +79,35 @@ export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnCha
       allowSearchFilter: true,
       noDataAvailablePlaceholderText: 'Nessun dato disponibile',
     };
+
   }
+
+  openDialog() {
+    const dialogElement = this.dialog?.nativeElement;
+    dialogElement?.show();
+    setTimeout(() => {
+      dialogElement!.style.opacity = '1';
+      dialogElement!.style.transform = 'scale(1)';
+    }, 500);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['proprietario'] && changes['proprietario'].currentValue) {
+
+      console.log('🔄 Proprietario cambiato:', changes['proprietario'].currentValue);
+
+      this.immobileService.getAllImmobili().subscribe();
+      this.openDialog();
+
+      this.patchForm()
+    }
+  }
+
   patchForm(): void {
     if (this.proprietario) {
-      this.selectedImmobili= this.listaImmobiliUnica
-        .filter(imm => imm.proprietariDTO && imm.proprietariDTO.id === this.proprietario?.id);
-
+      this.listaImmobiliUnica = this.listaImmobile.filter(imm => !imm.proprietariDTO || imm.proprietariDTO.id === this.proprietario!.id);
+      this.selectedImmobili = this.listaImmobiliUnica
+        .filter(imm => imm.proprietariDTO?.id === this.proprietario?.id);
       this.propUpdateForm.patchValue({
         id: this.proprietario.id,
         nome: this.proprietario.nome,
@@ -103,29 +115,6 @@ export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnCha
         listaImmobiliDTO: this.selectedImmobili,
 
       });
-    }
-    console.log(this.propUpdateForm.get('listaImmobiliDTO')?.value);
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['proprietario'] && this.proprietario) {
-      // this.propUpdateForm.patchValue({
-      //   id: this.proprietario.id,
-      //   nome: this.proprietario.nome,
-      //   cognome: this.proprietario.cognome,
-      //   // listaImmobiliDTO: this.proprietario.listaImmobiliDTO
-      // });
-      //
-      // // Aggiungi gli immobili del proprietario alla lista di immobili selezionati
-      // // this.selectedImmobili = [...this.proprietario.listaImmobiliDTO];
-      // this.selectedImmobili = this.listaImmobiliUnica
-      //   .filter(immobile => immobile.proprietariDTO && immobile.proprietariDTO.id === this.proprietario?.id);
-      //
-      // // this.propUpdateForm.get('listaImmobiliDTO')?.setValue(this.selectedImmobili);
-      //
-      // this.propUpdateForm.patchValue({
-      //   listaImmobiliDTO: this.selectedImmobili
-      // })
-      this.patchForm();
     }
   }
 
@@ -144,13 +133,12 @@ export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnCha
   onSelectAll(items: any[]) {
     this.selectedImmobili = items;
 
-    // Filtra duplicati
-    // items.forEach((item: ImmobileModel) => {
-    //   if (!this.selectedImmobili.some((immobile: ImmobileModel) => immobile.id === item.id)) {
-    //     this.selectedImmobili.push(item);
-    //   }
-    // });
+    this.propUpdateForm.get('listaImmobiliDTO')?.setValue(this.selectedImmobili);
+    console.log(this.selectedImmobili);
+  }
 
+  onDeSelectAll(items: any) {
+    this.selectedImmobili = [];
     this.propUpdateForm.get('listaImmobiliDTO')?.setValue(this.selectedImmobili);
     console.log(this.selectedImmobili);
   }
@@ -191,16 +179,9 @@ export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnCha
     }
   }
 
-  openDialog() {
-    const dialogElement = this.dialog?.nativeElement;
-    dialogElement?.show();
-    setTimeout(() => {
-      dialogElement!.style.opacity = '1';
-      dialogElement!.style.transform = 'scale(1)';
-    }, 500);
-  }
 
   onClose() {
+    this.proprietarioService.getAllProprietari().subscribe();
     const dialogElement = this.dialog?.nativeElement;
     dialogElement!.style.opacity = '0';
     dialogElement!.style.transform = 'scale(0.7)';

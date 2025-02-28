@@ -12,7 +12,7 @@ dialog {
   position: fixed;
   top: 5%;
   left: 0;
-  /*transform: translate(50%, 50%);*/
+
   border: 1px solid #ccc;
   padding: 1rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -88,16 +88,6 @@ label {
   float: right !important; /* Cambiato l'allineamento */
 max-width: 300px !important;
 }
-/*::ng-deep .my-custom-multiselect-dropdown .dropdown-btn .selected-item-container .selected-item {*/
-/*  border: 2px solid #ff5733 !important; !* Cambiato il colore del bordo *!*/
-/*  margin-right: 6px !important; !* Cambiato il margine *!*/
-/*  background: #ff5733 !important; !* Cambiato il colore di sfondo *!*/
-/*  padding: 0 10px !important; !* Cambiato il padding *!*/
-/*  color: #000 !important; !* Cambiato il colore del testo *!*/
-/*  border-radius: 4px !important; !* Cambiato il raggio di bordatura *!*/
-/*  float: right !important; !* Cambiato l'allineamento *!*/
-/*  max-width: 300px !important;*/
-/*}*/
 
 select{
   border: 1px solid #CCCCCC;

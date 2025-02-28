@@ -1,7 +1,7 @@
 
-<button class="btn btn-success mt-5 ms-5 rounded-circle border" routerLink="/annessiForm"><i class="fa-solid fa-plus"></i></button>
+<button class="btn btn-success mt-5 ms-5 " routerLink="/annessiForm"><i class="fa-solid fa-plus"></i></button>
 <div class="d-flex justify-content-center align-items-center flex-direction-column">
-  <table class="table table-bordered table-dark table-striped table-hover m-5">
+  <table class="table table-bordered  table-hover m-3">
     <thead>
     <tr>
       <th scope="col">azioni</th>
@@ -13,8 +13,8 @@
     <tbody>
     <tr *ngFor="let annesso of listaAnnessi" >
       <td  class="d-flex justify-content-evenly">
-        <button class="btn btn-warning rounded-circle" (click)="opendialogUpdate(annesso)"><i class="fa-solid fa-pen-nib" style="color: #000000;"></i></button>
-        <button class="btn btn-danger rounded-circle" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="selectAnnesso(annesso)"><i class="fa-solid fa-trash" style="color: #000000;"></i></button>
+        <button class="btn btn-dark" (click)="opendialogUpdate(annesso)"><i class="fa-solid fa-pen-nib" style="color: #fff000;"></i></button>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="selectAnnesso(annesso)"><i class="fa-solid fa-trash" style="color: #FF0000;"></i></button>
 
 
       </td>

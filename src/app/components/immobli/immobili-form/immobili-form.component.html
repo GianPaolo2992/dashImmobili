@@ -23,11 +23,6 @@
   </div>
 
   <div>
-    <!--    <label for="costo">Costo:</label>-->
-    <!--    <input id="costo" class="styleInputText" type="text" formControlName="costo" appEuro>-->
-    <!--    <div *ngIf="immobiliForm.get('costo')?.invalid && immobiliForm.get('costo')?.touched">-->
-    <!--      campo è obbligatorio.-->
-    <!--    </div>-->
     <label for="costo">Costo:</label>
     <div class="position-relative">
       <input id="costo" class="styleInputText" type="number" formControlName="costo">
@@ -39,11 +34,6 @@
   </div>
 
   <div>
-    <!--    <label for="superfice">Superficie:</label>-->
-    <!--    <input id="superfice" class="styleInputText" type="text" formControlName="superfice" appSquareMeters>-->
-    <!--    <div *ngIf="immobiliForm.get('superfice')?.invalid && immobiliForm.get('superfice')?.touched">-->
-    <!--      campo è obbligatorio.-->
-    <!--    </div>-->
     <label for="superfice">Superficie:</label>
     <div class="position-relative">
       <input id="superfice" class="styleInputText" type="number" formControlName="superfice">
@@ -66,44 +56,17 @@
     <div class="row box ">
       <div class="col-12">
         <ng-multiselect-dropdown class="my-custom-multiselect-dropdown"
-          [settings]="dropdownSettings"
-          [data]="listaAnnessiNoIMMBL"
-        formControlName="listaAnnessiDTO"
-          (onSelect)="onItemSelect($event)"
-          (onDeSelect)="onItemDeSelect($event)"
-          (onSelectAll)="onSelectAll($event)">
+                                 [settings]="dropdownSettings"
+                                 [data]="listaAnnessiNoIMMBL"
+                                 formControlName="listaAnnessiDTO"
+                                 (onSelect)="onItemSelect($event)"
+                                 (onDeSelect)="onItemDeSelect($event)"
+                                 (onSelectAll)="onSelectAll($event)">
         </ng-multiselect-dropdown>
       </div>
     </div>
 
   </div>
-
-
-
-<!--  <label>annessi Diponibili:</label>-->
-<!--  <div class=" d-flex justify-content-center align-items-center">-->
-<!--    <div class="row box-over-flow">-->
-
-<!--      @if (listaAnnessiNoIMMBL!.length > 0) {-->
-<!--        <div class="col-4 form-check d-flex justify-content-center align-items-center"-->
-<!--             *ngFor="let annesso of listaAnnessiNoIMMBL; let i = index">-->
-<!--          <input class="form-check-input m-2" type="checkbox" [id]="'noPropCheck' + i"-->
-<!--                 (change)="onCheckboxChange($event, annesso)">-->
-<!--          <label class="form-check-label" [for]="'noPropCheck' + i">-->
-<!--            {{ annesso.tipo }} | mq: {{ annesso.superficie }}-->
-<!--          </label>-->
-<!--        </div>-->
-<!--      } @else {-->
-<!--        <label class="form-check-label">-->
-<!--          Nessun Annesso Libero-->
-<!--        </label>-->
-<!--      }-->
-
-<!--    </div>-->
-<!--  </div>-->
-
-
-
   <div>
     <label for="proprietariDTO">Proprietario:<span><small> (facoltativo)</small></span></label>
     <select id="proprietariDTO" type="select" formControlName="proprietariDTO">
@@ -112,11 +75,12 @@
         {{ prop.nome }} {{ prop.cognome }}
       </option>
     </select>
-
+  </div>
+  <div class="error" *ngIf="!isValid &&  immobiliForm.get('proprietariDTO')?.invalid">
+    campo è obbligatorio.
   </div>
   <div class="d-flex flex-row justify-content-evenly">
     <button type="submit">iniva</button>
-    <!--    [disabled]="immobiliForm.invalid"-->
     <button routerLink="/immobiliTable">indietro</button>
   </div>
 

@@ -7,7 +7,6 @@ import {ImmobileModel} from '../../../models/immobile.model';
 import {Subscription} from 'rxjs';
 import {ImmobileService} from '../../../services/immobile.service';
 import {ANNESSI_OPTIONS, Option} from '../../../constants/options';
-import {SquareMetersDirective} from '../../../directives/square-meters.directive';
 
 
 @Component({
@@ -31,7 +30,7 @@ export class AnnessiUpdateFormComponent implements OnInit, OnChanges, OnDestroy 
   annessiOptions: Option[] = ANNESSI_OPTIONS;
   listaImmobili?: ImmobileModel[];
   immobileDTO?: ImmobileModel;
-isValid = true;
+  isValid = true;
   private subscription: Subscription = new Subscription();
 
   constructor(private fb: FormBuilder, private annessoService: AnnessoService, private immobileService: ImmobileService) {
@@ -57,6 +56,8 @@ isValid = true;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['annesso'] && this.annesso) {
+      this.annessoService.getAllAnnessi().subscribe();
+      this.immobileService.getAllImmobili().subscribe();
       this.annessiUpdateForm.patchValue({
         id: this.annesso.id,
         tipo: this.annesso.tipo,
@@ -79,9 +80,6 @@ isValid = true;
     }, 500);
   }
 
-  // serializeImmobile(immobile: ImmobileModel) {
-  //   return JSON.stringify(immobile);
-  // } //???
 
   onSubmit() {
     if (this.annessiUpdateForm.valid) {
@@ -107,15 +105,15 @@ isValid = true;
 
         }
       })
-    }
-    else {
- this.isValid = false;
+    } else {
+      this.isValid = false;
     }
   }
 
 
-
   onClose() {
+    this.annessoService.getAllAnnessi().subscribe();
+    this.immobileService.getAllImmobili().subscribe();
     const dialogElement = this.dialog?.nativeElement;
     dialogElement!.style.opacity = '0';
     dialogElement!.style.transform = 'scale(0.7)';

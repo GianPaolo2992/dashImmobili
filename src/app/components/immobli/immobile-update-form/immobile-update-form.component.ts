@@ -37,7 +37,7 @@ import {IDropdownSettings, NgMultiSelectDropDownModule} from 'ng-multiselect-dro
   encapsulation: ViewEncapsulation.None
 })
 export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() immobile?: ImmobileModel;
+  @Input() immobile!: ImmobileModel;
   @ViewChild('dialog') dialog!: ElementRef<HTMLDialogElement>
   private fb = inject(FormBuilder);
   private immobileService = inject(ImmobileService)
@@ -59,14 +59,6 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
   dropdownSettings: IDropdownSettings = {};
   isValid = true;
 
-  openDialog() {
-    const dialogElement = this.dialog?.nativeElement;
-    dialogElement?.show();
-    setTimeout(() => {
-      dialogElement!.style.opacity = '1';
-      dialogElement!.style.transform = 'scale(1)';
-    }, 500);
-  }
 
   ngOnInit(): void {
     this.subscription.add(
@@ -76,14 +68,9 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
       ]).subscribe({
         next: ([props, allAnnessi]) => {
           this.listaProprietari = props;
-          this.listaAnnessiUnica = allAnnessi;
-          if (this.immobile) {
+          this.listaAnnessi = allAnnessi;
+          console.log(this.listaAnnessi);
 
-            this.oldProp = this.immobile.proprietariDTO;
-            this.selectedAnnessi = this.listaAnnessiUnica
-              .filter(annesso => annesso.immobileDTO && annesso.immobileDTO.id === this.immobile?.id);
-            this.patchForm();
-          }
         },
         error: error => {
           console.log('error', error);
@@ -97,7 +84,7 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
       costo: [0, Validators.required],
       superfice: [0, Validators.required],
       anno: [0, Validators.required],
-      proprietariDTO: [null],
+      proprietariDTO: [null,[Validators.required]],
       listaAnnessiDTO: [null],
     });
     this.dropdownSettings = {
@@ -111,11 +98,45 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
     };
   }
 
-  patchForm(): void {
-    if (this.immobile) {
-      this.selectedAnnessi = this.listaAnnessiUnica
-        .filter(annesso => annesso.immobileDTO && annesso.immobileDTO.id === this.immobile?.id);
+  openDialog() {
+    const dialogElement = this.dialog?.nativeElement;
+    dialogElement?.show();
+    setTimeout(() => {
+      dialogElement!.style.opacity = '1';
+      dialogElement!.style.transform = 'scale(1)';
+    }, 500);
+  }
 
+
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (changes['immobile'] && changes['immobile'].currentValue) {
+      console.log('🔄 immobile cambiato:', changes['immobile'].currentValue);
+console.log(this.immobile)
+      this.refreshData()
+      this.openDialog();
+      this.patchForm();
+    }
+  }
+
+
+  patchForm(): void {
+    console.log(this.immobile)
+    if (this.immobile) {
+
+      this.listaAnnessiUnica = this.listaAnnessi
+        .filter(a => a.immobileDTO?.id === this.immobile!.id || !a.immobileDTO);
+
+      console.log(this.listaAnnessiUnica);
+
+      this.selectedAnnessi = this.listaAnnessiUnica
+        .filter(annesso => annesso.immobileDTO && annesso.immobileDTO.id === this.immobile!.id);
+
+
+      console.log(this.selectedAnnessi);
+      // this.oldProp = this.listaProprietari?.find(p => p.id === this.immobile!.proprietariDTO.id)
+this.oldProp = this.immobile.proprietariDTO
+      console.log(this.oldProp);
       this.immobiliForm.patchValue({
         id: this.immobile.id,
         tipo: this.immobile.tipo,
@@ -127,14 +148,9 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
         listaAnnessiDTO: this.selectedAnnessi,
       });
     }
-    console.log(this.oldProp);
+
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['immobile'] && this.immobile) {
-      this.patchForm();
-    }
-  }
   onItemSelect(item: any) {
     if (!this.selectedAnnessi.some(annesso => annesso.id === item.id)) {
       this.selectedAnnessi.push(item);
@@ -156,10 +172,15 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
     console.log(this.selectedAnnessi);
   }
 
+  onDeSelectAll() {
+    this.selectedAnnessi = [];
+    this.immobiliForm.get('listaImmobiliDTO')?.setValue(this.selectedAnnessi);
+    console.log(this.selectedAnnessi);
+
+  }
 
   serializeProprietario(prop: ProprietarioModel) {
     return JSON.stringify(prop);
-
   }
 
 
@@ -167,8 +188,6 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
     // const superficieValue = this.immobiliForm.get('superfice')?.value.replace(/[^0-9]/g, '');
     // const costoValue =  this.immobiliForm.get('costo')?.value.replace(/[^0-9]/g, '');
     if (this.immobiliForm.valid) {
-
-
 
 
       const IMMOBILE: ImmobileModel = {
@@ -180,16 +199,15 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
         // costo: costoValue ? parseFloat(costoValue.replace(/[^0-9.]/g, '')) : 0,
         // superfice: superficieValue ? parseFloat(superficieValue.replace(/[^0-9.]/g, '')) : 0,
         anno: this.immobiliForm.get('anno')?.value,
-        proprietariDTO:this.immobiliForm.get('proprietariDTO')?.value? JSON.parse(this.immobiliForm.get('proprietariDTO')?.value): null,
+        proprietariDTO: this.immobiliForm.get('proprietariDTO')?.value ? JSON.parse(this.immobiliForm.get('proprietariDTO')?.value) : null,
         listaAnnessiDTO: this.selectedAnnessi
 
       }
-      console.log(JSON.stringify(IMMOBILE));
       this.immobileService.updateImmobile(IMMOBILE).subscribe({
         next: (result) => {
           console.log('success', result);
           this.onClose()
-          this.refreshData()
+
         },
         error: error => {
           console.log('error', error);
@@ -209,7 +227,11 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
   }
 
   onClose() {
+    this.refreshData();
+    this.selectedAnnessi = [];
+
     const dialogElement = this.dialog?.nativeElement;
+    this.ngOnDestroy()
     dialogElement!.style.opacity = '0';
     dialogElement!.style.transform = 'scale(0.7)';
     setTimeout(() => {

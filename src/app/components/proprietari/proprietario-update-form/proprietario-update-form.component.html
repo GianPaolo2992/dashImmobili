@@ -15,35 +15,18 @@
         cognome è obbligatorio.
       </div>
     </div>
-    <!--    <h5>Immobili Diponibili:</h5>-->
-    <!--    <div class="row box-over-flow">-->
-    <!--      <div class="col-4 form-check d-flex justify-content-center align-items-center" *ngFor="let immobile of listaImmobiliNOProp; let i = index">-->
-    <!--        <input class="form-check-input m-2" type="checkbox" [id]="'noPropCheck' + i" (change)="onCheckboxChange($event, immobile)">-->
-    <!--        <label class="form-check-label" [for]="'noPropCheck' + i">-->
-    <!--          {{immobile.tipo}}-->
-    <!--        </label>-->
-    <!--      </div>-->
-    <!--    </div>-->
-    <!--    <h5>Immobili di {{proprietario?.nome ? proprietario!.nome : 'ND' }} {{proprietario?.cognome ? proprietario!.cognome : 'ND' }}:</h5>-->
-    <!--    <div class="row box-over-flow">-->
-    <!--      <div class="col-4 form-check d-flex justify-content-center align-items-center" *ngFor="let immobile of proprietario?.listaImmobiliDTO; let i = index">-->
-    <!--        <input class="form-check-input me-2" type="checkbox" [id]="'noPropCheck' + i" [checked]="true" (change)="onCheckboxChange($event, immobile)">-->
-    <!--        <label class="form-check-label" [for]="'noPropCheck' + i">-->
-    <!--          {{immobile.tipo}}-->
-    <!--        </label>-->
-    <!--      </div>-->
-    <!--    </div>-->
     <label>Immobili Disponibili:</label>
     <div class="d-flex justify-content-center align-items-center">
       <div class="row box ">
-        <div class="col-12" >
+        <div class="col-12">
           <ng-multiselect-dropdown class="my-custom-multiselect-dropdown"
-            [settings]="dropdownSettings"
-            [data]="listaImmobiliUnica"
-            formControlName="listaImmobiliDTO"
-            (onSelect)="onItemSelect($event)"
-            (onDeSelect)="onItemDeSelect($event)"
-            (onSelectAll)="onSelectAll($event)">
+                                   [settings]="dropdownSettings"
+                                   [data]="listaImmobiliUnica"
+                                   formControlName="listaImmobiliDTO"
+                                   (onSelect)="onItemSelect($event)"
+                                   (onDeSelect)="onItemDeSelect($event)"
+                                   (onSelectAll)="onSelectAll($event)"
+                                   (onDeSelectAll)="onDeSelectAll($event)">
           </ng-multiselect-dropdown>
         </div>
       </div>

@@ -31,7 +31,7 @@ export class ProprietarioService {
     return this.listaProp$.asObservable();
   }
 
-  getAllProprietarioById(proprietario:ProprietarioModel): Observable<ProprietarioModel> {
+  getProprietarioById(proprietario:ProprietarioModel): Observable<ProprietarioModel> {
     return this.http.get<ProprietarioModel>(`${this.getById}/${proprietario.id}`);
   }
 

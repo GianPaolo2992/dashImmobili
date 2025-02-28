@@ -1,0 +1,7 @@
+tr:hover {
+  transform: scale(1.01);
+
+}
+tr{
+  transition-duration: 0.4s;
+}

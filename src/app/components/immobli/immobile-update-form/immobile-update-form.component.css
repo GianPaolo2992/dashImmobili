@@ -1,12 +1,13 @@
-:host{
+:host {
 
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
+
 dialog {
-  height:90vh;
+  height: 90vh;
 
   position: fixed;
   top: 5%;
@@ -29,12 +30,12 @@ dialog[open] {
   opacity: 1; /* Visibile quando aperto */
   transform: scale(1); /* Dimensione normale quando aperto */
   transition: opacity 0.5s ease, transform 0.5s ease; /* Durata della transizione */
-  overflow:auto ;
+  overflow: auto;
 }
 
 
 form {
-width: 700px;
+  width: 700px;
 
 
   margin: auto;
@@ -54,13 +55,14 @@ label {
 }
 
 .styleInputText {
-  border: 1px solid  #adadad;
+  border: 1px solid #adadad;
   padding: .5em;
   font-size: 1em;
   width: 100%;
   box-sizing: border-box;
   border-radius: 4px;
 }
+
 /*.box-over-flow {*/
 /*  max-height: 250px;*/
 /*  border: 1px solid #CCCCCC;*/
@@ -68,16 +70,18 @@ label {
 /*  overflow: auto;*/
 /*  width: 100%;*/
 /*}*/
-  .box {
+.box {
 
   width: 100%;
 }
+
 .row > * {
 
   padding-right: 0; /* Rimuove il padding destro */
-  padding-left: 0;  /* Rimuove il padding sinistro */
+  padding-left: 0; /* Rimuove il padding sinistro */
 
 }
+
 .my-custom-multiselect-dropdown .dropdown-btn .selected-item-container .selected-item {
   border: 2px solid #007BFF !important; /* Cambiato il colore del bordo */
   margin-right: 6px !important; /* Cambiato il margine */
@@ -88,13 +92,15 @@ label {
   float: right !important; /* Cambiato l'allineamento */
   max-width: 300px !important;
 }
-select{
+
+select {
   border: 1px solid #CCCCCC;
   padding: .5em;
   font-size: 1em;
   width: 100%;
   box-sizing: border-box;
 }
+
 option {
   border: 1px solid #CCCCCC;
   padding: .5em;
@@ -120,9 +126,11 @@ button:disabled {
   color: red;
   font-size: 0.8em;
 }
+
 .pointer-cursor {
   cursor: pointer;
 }
+
 .position-relative {
   position: relative;
 }

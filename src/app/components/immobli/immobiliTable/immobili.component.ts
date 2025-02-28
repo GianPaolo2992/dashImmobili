@@ -27,7 +27,7 @@ import {ProprietarioService} from '../../../services/proprietario.service';
   templateUrl: './immobili.component.html',
   styleUrl: './immobili.component.css'
 })
-export class ImmobiliComponent implements OnInit, OnDestroy{
+export class ImmobiliComponent implements OnInit, OnDestroy {
   private immobileService = inject(ImmobileService);
   private proprietarioService = inject(ProprietarioService);
   private annessoService = inject(AnnessoService);
@@ -37,15 +37,16 @@ export class ImmobiliComponent implements OnInit, OnDestroy{
   @ViewChild(ImmobileUpdateFormComponent) dialogUpdateComponent!: ImmobileUpdateFormComponent;
 
 
-
   listaImmobili?: ImmobileModel[];
   selectedImmobile?: ImmobileModel;
-
+immobileDeleted?: ImmobileModel;
 
   ngOnInit() {
     this.subscription.add(
       this.immobileService.getListaImmobili$().subscribe({
-        next:( data) => { this.listaImmobili = data},
+        next: (data) => {
+          this.listaImmobili = data
+        },
         error: error => {
           console.log(error);
         }
@@ -54,6 +55,7 @@ export class ImmobiliComponent implements OnInit, OnDestroy{
     );
     this.refreshData()
   }
+
   refreshData() {
     this.immobileService.getAllImmobili().subscribe();
     this.proprietarioService.getAllProprietari().subscribe();
@@ -62,23 +64,31 @@ export class ImmobiliComponent implements OnInit, OnDestroy{
 
 
   openDialogProp(proprietario: ProprietarioModel | null) {
-   this.dialogPropComponent.proprietario = proprietario;
-   this.dialogPropComponent.openDialog();
- }
-  openDialogAnnessi(listaAnnessi:AnnessoModel[]){
+    this.dialogPropComponent.proprietario = proprietario;
+    this.dialogPropComponent.openDialog();
+  }
+
+  openDialogAnnessi(listaAnnessi: AnnessoModel[]) {
     this.dialogAnnesiComponent.listaAnnessi = listaAnnessi
     this.dialogAnnesiComponent.openDialog()
   }
-  openDialogUpdate(immobile:ImmobileModel){
+
+  openDialogUpdate(immobile: ImmobileModel) {
     this.selectedImmobile = immobile;
+    console.log(this.selectedImmobile);
     this.dialogUpdateComponent.openDialog();
   }
+
   selectImmobile(immobile: ImmobileModel) {
     this.selectedImmobile = immobile;
   }
-  deleteimmobile(immobileId: number){
+  selectDeleteImmobile(immobile: ImmobileModel) {
+    this.immobileDeleted = immobile;
+  }
+
+  deleteimmobile(immobileId: number) {
     this.immobileService.deleteImmobile(immobileId).subscribe({
-      next:(result) => {
+      next: (result) => {
         console.log('immobile deletato:' + JSON.stringify(result));
         this.refreshData()
       },
@@ -86,9 +96,10 @@ export class ImmobiliComponent implements OnInit, OnDestroy{
         console.log(error);
       }
     })
-}
+  }
+
   ngOnDestroy(): void {
-    if(this.subscription) {
+    if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }

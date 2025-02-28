@@ -6,7 +6,7 @@ import {ImmobileModel} from '../../../models/immobile.model';
 import {RouterLink} from '@angular/router';
 import {ProprietarioUpdateFormComponent} from '../proprietario-update-form/proprietario-update-form.component';
 import {Subscription} from 'rxjs';
-import {SquareMeterPipe} from '../../../pipes/square-meter.pipe';
+
 
 
 @Component({
@@ -29,7 +29,7 @@ export class ProprietariComponent implements OnInit, OnDestroy {
 
   listProp?: ProprietarioModel[];
   selectedProp?: ProprietarioModel;
-
+  deletedProp?:ProprietarioModel;
 
   @ViewChild(ImmobileDialogComponent) modalComponent!: ImmobileDialogComponent;
   @ViewChild(ProprietarioUpdateFormComponent) dialogUpdateForm!: ProprietarioUpdateFormComponent;
@@ -48,8 +48,6 @@ export class ProprietariComponent implements OnInit, OnDestroy {
       )
     )
     this.proprietarioService.getAllProprietari().subscribe();
-
-
   }
 
   openDialogImmobili(Immobili: ImmobileModel[]) {
@@ -58,19 +56,25 @@ export class ProprietariComponent implements OnInit, OnDestroy {
   }
 
   openDialogUpdate(proprietario: ProprietarioModel) {
-    this.selectProp(proprietario)
+    this.selectedProp = proprietario;
     this.dialogUpdateForm.openDialog();
   }
-selectProp(proprietario: ProprietarioModel) {
+
+  selectProp(proprietario: ProprietarioModel) {
     this.selectedProp = proprietario;
-}
+  }
+
+  selectDeleteProp(prop: ProprietarioModel){
+    this.deletedProp = prop;
+  }
+
   deleteProp(id: number) {
     this.proprietarioService.deleteProp(id).subscribe({
       next: (result) => {
         console.log('proprietario elinìminato:' + result);
         this.proprietarioService.getAllProprietari().subscribe()
       },
-      error: (error) =>{
+      error: (error) => {
         console.log(error);
       }
     })

@@ -36,7 +36,7 @@ export class AnnessiFormComponent implements OnInit, OnDestroy {
   annessiForm!: FormGroup;
   listaImmobili?: ImmobileModel[];
   annessiOptions: Option[] = ANNESSI_OPTIONS;
-  isValid= true;
+  isValid = true;
 
   constructor() {
   }

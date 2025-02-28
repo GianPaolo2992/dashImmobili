@@ -16,11 +16,7 @@
       </div>
     </div>
     <div>
-      <!--      <label for="superficie">Superficie:</label>-->
-      <!--      <input id="superficie" type="text" formControlName="superficie" appSquareMeters>-->
-      <!--      <div *ngIf="annessiUpdateForm.get('superficie')?.invalid && annessiUpdateForm.get('superficie')?.touched">-->
-      <!--        Inserisci una superficie.-->
-      <!--      </div>-->
+
       <label for="superficie">Superficie:</label>
       <div class="position-relative">
         <input id="superficie" class="styleInputText" type="number" formControlName="superficie">
@@ -39,7 +35,7 @@
         <option *ngIf="!immobileDTO" [value]="null" disabled selected>
           Scegli un immobile...
         </option>
-        <option *ngIf="immobileDTO" [value]="immobileDTO" disabled selected>
+        <option *ngIf="immobileDTO" [value]="immobileDTO" selected>
           {{ immobileDTO.tipo }} | prop: {{ immobileDTO.proprietariDTO ? immobileDTO.proprietariDTO.cognome : 'ND' }}
         </option>
         <option [value]="null">
@@ -51,9 +47,10 @@
       </select>
     </div>
 
-
-    <button type="submit">Modifica</button>
-    <button type="button" (click)="onClose()">Chiudi</button>
+    <div class="d-flex flex-row justify-content-evenly">
+      <button type="submit">Modifica</button>
+      <button type="button" (click)="onClose()">Chiudi</button>
+    </div>
   </form>
 
 </dialog>

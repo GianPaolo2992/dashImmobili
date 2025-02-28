@@ -73,7 +73,7 @@ export class ImmobiliFormComponent implements OnInit {
       costo: [1, [Validators.required, Validators.minLength(1)]],
       superfice: [5, [Validators.required, Validators.minLength(5)]],
       anno: [1980, [Validators.required]],
-      proprietariDTO: [null],
+      proprietariDTO: [null,[Validators.required]],
       listaAnnessiDTO: [],
     })
     this.dropdownSettings = {
@@ -132,6 +132,7 @@ export class ImmobiliFormComponent implements OnInit {
   serializeAnnessi(ann: AnnessoModel) {
     return JSON.stringify(ann);
   }
+
   //
   // onCheckboxChange(event: Event, annesso: AnnessoModel) {
   //   const checkbox = event.target as HTMLInputElement;
