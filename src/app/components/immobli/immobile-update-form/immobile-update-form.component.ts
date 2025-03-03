@@ -66,7 +66,7 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
         this.proprietarioService.getListaProprietari$(),
         this.annessoService.getListaAnnessi$()
       ]).subscribe({
-        next: ([props, allAnnessi]) => {
+        next: ([props, allAnnessi]: [ProprietarioModel[], AnnessoModel[]]) => {
           this.listaProprietari = props;
           this.listaAnnessi = allAnnessi;
           console.log(this.listaAnnessi);
@@ -77,14 +77,15 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
         }
       })
     );
-    this.refreshData();
+    this.proprietarioService.getAllProprietari().subscribe();
+    this.annessoService.getAllAnnessi().subscribe()
     this.immobiliForm = this.fb.group({
       tipo: ['', Validators.required],
       vani: [0, Validators.required],
       costo: [0, Validators.required],
       superfice: [0, Validators.required],
       anno: [0, Validators.required],
-      proprietariDTO: [null,[Validators.required]],
+      proprietariDTO: [null, [Validators.required]],
       listaAnnessiDTO: [null],
     });
     this.dropdownSettings = {
@@ -112,8 +113,9 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
 
     if (changes['immobile'] && changes['immobile'].currentValue) {
       console.log('🔄 immobile cambiato:', changes['immobile'].currentValue);
-console.log(this.immobile)
-      this.refreshData()
+      console.log(this.immobile)
+      this.proprietarioService.getAllProprietari().subscribe();
+      this.annessoService.getAllAnnessi().subscribe()
       this.openDialog();
       this.patchForm();
     }
@@ -135,7 +137,7 @@ console.log(this.immobile)
 
       console.log(this.selectedAnnessi);
       // this.oldProp = this.listaProprietari?.find(p => p.id === this.immobile!.proprietariDTO.id)
-this.oldProp = this.immobile.proprietariDTO
+      this.oldProp = this.immobile.proprietariDTO
       console.log(this.oldProp);
       this.immobiliForm.patchValue({
         id: this.immobile.id,
@@ -229,9 +231,9 @@ this.oldProp = this.immobile.proprietariDTO
   onClose() {
     this.refreshData();
     this.selectedAnnessi = [];
+    // this.patchForm();
 
     const dialogElement = this.dialog?.nativeElement;
-    this.ngOnDestroy()
     dialogElement!.style.opacity = '0';
     dialogElement!.style.transform = 'scale(0.7)';
     setTimeout(() => {

@@ -72,7 +72,11 @@ export class ProprietariComponent implements OnInit, OnDestroy {
     this.proprietarioService.deleteProp(id).subscribe({
       next: (result) => {
         console.log('proprietario elinìminato:' + result);
-        this.proprietarioService.getAllProprietari().subscribe()
+       this.proprietarioService.getAllProprietari().subscribe({
+         next: (result) => {
+           console.log(result);
+         }
+       });
       },
       error: (error) => {
         console.log(error);

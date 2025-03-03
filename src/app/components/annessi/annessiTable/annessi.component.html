@@ -1,32 +1,110 @@
+<!--<div class="row justify-content-between flex-row p-3" >-->
+<!--  <div class="col-6 align-content-end ">-->
+<!--    <input type="text" #searchInput placeholder="Enter keyword" />-->
+<!--  </div>-->
 
-<button class="btn btn-success mt-5 ms-5 " routerLink="/annessiForm"><i class="fa-solid fa-plus"></i></button>
+<!--  <div *ngIf="errorMessage">-->
+<!--    <p class="error">{{ errorMessage }}</p>-->
+<!--  </div>-->
+<!--  <div class="col-6">-->
+<!--    <button class="btn btn-success mt-5 ms-5 " routerLink="/annessiForm"><i class="fa-solid fa-plus"></i></button>-->
+<!--  </div>-->
+
+
+<!--</div>-->
+<!--<div class="d-flex justify-content-center align-items-center flex-direction-column">-->
+<!--  <table class="table table-bordered  table-hover m-3">-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--      <th scope="col">azioni</th>-->
+<!--      <th scope="col">tipo</th>-->
+<!--      <th scope="col">superficie</th>-->
+<!--      <th scope="col">immobile</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--    <tr *ngFor="let annesso of listaAnnessi" >-->
+<!--      <td  class="d-flex justify-content-evenly">-->
+<!--        <button class="btn btn-dark" (click)="opendialogUpdate(annesso)"><i class="fa-solid fa-pen-nib" style="color: #fff000;"></i></button>-->
+<!--        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="selectAnnesso(annesso)"><i class="fa-solid fa-trash" style="color: #FF0000;"></i></button>-->
+
+
+<!--      </td>-->
+<!--      <td>{{ annesso.tipo }}</td>-->
+<!--      <td>{{ annesso.superficie | squareMeter }}</td>-->
+<!--      <td (click)="openDialogImmobile(annesso.immobileDTO!)">{{ annesso.immobileDTO?.tipo }}</td>-->
+<!--    </tr>-->
+
+<!--    </tbody>-->
+<!--  </table>-->
+<!--</div>-->
+<!--&lt;!&ndash;modale di conferma delete &ndash;&gt;-->
+<!--<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+<!--  <div class="modal-dialog">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>-->
+<!--        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--      </div>-->
+<!--      <div class="modal-body text-dark">-->
+<!--        confermi di voler eliminare questo annesso?-->
+<!--        <ul>-->
+<!--          <p class="m-0 mt-3"><small >tipo</small></p>-->
+<!--          <li>{{selectedAnnesso?.tipo}}</li>-->
+<!--          <p class="m-0 mt-3"><small>superficie</small></p>-->
+<!--          <li>{{selectedAnnesso?.superficie ? selectedAnnesso!.superficie : 0 | squareMeter}}</li>-->
+<!--        </ul>-->
+<!--      </div>-->
+<!--      <div class="modal-footer">-->
+<!--        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>-->
+<!--        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteAnnesso(selectedAnnesso?.id!)">Elimina</button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<app-immobile-dialog ></app-immobile-dialog>-->
+<!--<app-annessi-update-form [annesso]="selectedAnnesso"></app-annessi-update-form>-->
+
+
+<!--<router-outlet></router-outlet>-->
+<div class="row justify-content-between flex-row p-3">
+  <div class="col-6 align-content-end">
+    <input type="text"  [formControl]="searchInput" placeholder="Enter keyword" />
+  </div>
+
+  <div *ngIf="errorMessage">
+    <p class="error">{{ errorMessage }}</p>
+  </div>
+  <div class="col-6">
+    <button class="btn btn-success mt-5 ms-5" routerLink="/annessiForm"><i class="fa-solid fa-plus"></i></button>
+  </div>
+</div>
+
 <div class="d-flex justify-content-center align-items-center flex-direction-column">
-  <table class="table table-bordered  table-hover m-3">
+  <table class="table table-bordered table-hover m-3">
     <thead>
     <tr>
-      <th scope="col">azioni</th>
-      <th scope="col">tipo</th>
-      <th scope="col">superficie</th>
-      <th scope="col">immobile</th>
+      <th scope="col">Azioni</th>
+      <th scope="col">Tipo</th>
+      <th scope="col">Superficie</th>
+      <th scope="col">Immobile</th>
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let annesso of listaAnnessi" >
-      <td  class="d-flex justify-content-evenly">
+    <tr *ngFor="let annesso of listaAnnessi">
+      <td class="d-flex justify-content-evenly">
         <button class="btn btn-dark" (click)="opendialogUpdate(annesso)"><i class="fa-solid fa-pen-nib" style="color: #fff000;"></i></button>
         <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="selectAnnesso(annesso)"><i class="fa-solid fa-trash" style="color: #FF0000;"></i></button>
-
-
       </td>
       <td>{{ annesso.tipo }}</td>
       <td>{{ annesso.superficie | squareMeter }}</td>
       <td (click)="openDialogImmobile(annesso.immobileDTO!)">{{ annesso.immobileDTO?.tipo }}</td>
     </tr>
-
     </tbody>
   </table>
 </div>
-<!--modale di conferma delete -->
+<!-- Modale di conferma delete -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -35,12 +113,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-dark">
-        confermi di voler eliminare questo annesso?
+        Confermi di voler eliminare questo annesso?
         <ul>
-          <p class="m-0 mt-3"><small >tipo</small></p>
-          <li>{{selectedAnnesso?.tipo}}</li>
-          <p class="m-0 mt-3"><small>superficie</small></p>
-          <li>{{selectedAnnesso?.superficie ? selectedAnnesso!.superficie : 0 | squareMeter}}</li>
+          <p class="m-0 mt-3"><small>Tipo</small></p>
+          <li>{{ selectedAnnesso?.tipo }}</li>
+          <p class="m-0 mt-3"><small>Superficie</small></p>
+          <li>{{ selectedAnnesso?.superficie ? selectedAnnesso!.superficie : 0 | squareMeter }}</li>
         </ul>
       </div>
       <div class="modal-footer">
@@ -51,8 +129,7 @@
   </div>
 </div>
 
-<app-immobile-dialog ></app-immobile-dialog>
+<app-immobile-dialog></app-immobile-dialog>
 <app-annessi-update-form [annesso]="selectedAnnesso"></app-annessi-update-form>
-
 
 <router-outlet></router-outlet>
