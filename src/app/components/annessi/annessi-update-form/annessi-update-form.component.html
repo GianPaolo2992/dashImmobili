@@ -41,7 +41,7 @@
         <option [value]="null">
           nessun Immobile
         </option>
-        <option *ngFor="let immobile of listaImmobili" [value]="immobile">
+        <option *ngFor="let immobile of listaImmobili" [value]="serializeImmobile(immobile)">
           {{ immobile.tipo }} | prop: {{ immobile.proprietariDTO ? immobile.proprietariDTO.cognome : 'ND' }}
         </option>
       </select>

@@ -37,7 +37,7 @@ import {IDropdownSettings, NgMultiSelectDropDownModule} from 'ng-multiselect-dro
   encapsulation: ViewEncapsulation.None
 })
 export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() immobile!: ImmobileModel;
+  @Input() immobile?: ImmobileModel;
   @ViewChild('dialog') dialog!: ElementRef<HTMLDialogElement>
   private fb = inject(FormBuilder);
   private immobileService = inject(ImmobileService)

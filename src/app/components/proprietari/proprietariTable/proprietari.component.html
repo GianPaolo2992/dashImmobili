@@ -1,5 +1,16 @@
-<button class="btn btn-success ms-5 mt-5" routerLink="/proprietariForm"><i class="fa-solid fa-plus"></i></button>
+<div class="row justify-content-between flex-row px-3 ">
+  <div class="col-6 align-content-end ps-3">
+    <input type="text"  [formControl]="searchInput" placeholder="Enter keyword" />
+  </div>
 
+
+  <div class="col-6 d-flex justify-content-end align-content-end pe-3 ">
+    <button class="btn btn-success ms-5 mt-5" routerLink="/proprietariForm"><i class="fa-solid fa-plus"></i></button>
+  </div>
+</div>
+<div *ngIf="errorMessage">
+  <p class="error">{{ errorMessage }}</p>
+</div>
 <div class="d-flex justify-content-center align-items-center flex-direction-column">
   <table class="table table-bordered  table-hover m-3">
     <thead>
@@ -11,8 +22,8 @@
     </tr>
     </thead>
     <tbody>
-      @for(prop of listProp; track prop.id){
-        <tr>
+<!--      @for(prop of listProp; track prop.id){-->
+        <tr *ngFor="let prop of listProp">
           <th scope="row" class="d-flex justify-content-evenly">
             <button class="btn btn-dark" (click)="openDialogUpdate(prop)"><i class="fa-solid fa-pen-nib" style="color: #fff000;"></i></button>
             <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="selectDeleteProp(prop)" ><i class="fa-solid fa-trash" style="color: #FF0000;"></i></button>
@@ -24,7 +35,7 @@
             {{  prop.listaImmobiliDTO.length }}
           </td>
         </tr>
-      }
+<!--      }-->
 
     </tbody>
   </table>

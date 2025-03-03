@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { ProprietarioModel } from '../models/proprietario.model';
-import {BehaviorSubject, Observable, tap} from 'rxjs';
+import {BehaviorSubject, catchError, Observable, tap, throwError} from 'rxjs';
 import {AnnessoModel} from '../models/annesso.model';
 import {ImmobileModel} from '../models/immobile.model';
 
@@ -43,6 +43,23 @@ export class ProprietarioService {
   }
   deleteProp(proprietarioId:number):Observable<ProprietarioModel> {
     return this.http.delete<ProprietarioModel>(`${this.delete}/${proprietarioId}`)
+  }
+  searchProp(keyword: string): Observable<ProprietarioModel[]> {
+    return this.http.get<ProprietarioModel[]>(`${this.baseUrl}/search?keyword=${keyword}`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Errore del client
+      errorMessage = `An error occurred: ${error.error.message}`;
+    } else {
+      // Errore del server
+      errorMessage = `Server returned code: ${error.status}, error message is: ${error.message}`;
+    }
+    return throwError(errorMessage);
   }
 
 }

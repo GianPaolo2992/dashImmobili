@@ -80,7 +80,9 @@ export class AnnessiUpdateFormComponent implements OnInit, OnChanges, OnDestroy 
     }, 500);
   }
 
-
+serializeImmobile(immobile: ImmobileModel) {
+   return  JSON.stringify(immobile)
+}
   onSubmit() {
     if (this.annessiUpdateForm.valid) {
       const AnnessoUpdated: AnnessoModel = {
@@ -88,7 +90,7 @@ export class AnnessiUpdateFormComponent implements OnInit, OnChanges, OnDestroy 
         tipo: this.annessiUpdateForm.get('tipo')!.value,
         superficie: this.annessiUpdateForm.get('superficie')!.value,
         // superficie:  this.annessiUpdateForm.get('superficie')?.value.replace(/[^0-9.]/g, ''),
-        immobileDTO: this.annessiUpdateForm.get('immobileDTO')!.value
+        immobileDTO: this.annessiUpdateForm.get('immobileDTO')?.value ? JSON.parse(this.annessiUpdateForm.get('immobileDTO')?.value) : null ,
       }
 
       this.annessoService.updateAnnesso(AnnessoUpdated).subscribe({

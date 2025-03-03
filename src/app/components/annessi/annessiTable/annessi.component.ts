@@ -47,16 +47,7 @@ private subscription:Subscription = new Subscription()
   errorMessage: string = '';
 searchInput = new FormControl('');
 
-  // ngOnInit(): void {
-  //   this.subscription.add(
-  //     this.annessiService.getListaAnnessi$().subscribe({
-  //       next:(result:AnnessoModel[])=> { this.listaAnnessi = result;},
-  //     })
-  //
-  //   );
-  //   this.annessiService.getAllAnnessi().subscribe()
-  //
-  // }
+
   ngOnInit(): void {
     this.subscription.add(
       this.annessiService.getListaAnnessi$().subscribe({
@@ -67,44 +58,15 @@ searchInput = new FormControl('');
       })
     );
     this.annessiService.getAllAnnessi().subscribe()
-    this.searchInput.valueChanges.pipe(debounceTime(200), switchMap(text=>this.annessiService.searchAnnessi(text||''))).subscribe(searchResult => this.listaAnnessi = searchResult);
+    this.searchInput.valueChanges
+      .pipe(
+        debounceTime(200),
+        switchMap(text=>this.annessiService.searchAnnessi(text||''))
+      )
+      .subscribe(searchResult => this.listaAnnessi = searchResult);
 
   }
 
-  // ngAfterViewInit(): void {
-  //   fromEvent<Event>(this.searchInput?.nativeElement, 'input').pipe(
-  //     map((event: Event) => (event.target as HTMLInputElement).value),
-  //     debounceTime(300), // Debounce per limitare le richieste
-  //     distinctUntilChanged()
-  //   ).subscribe(keyword => {
-  //     this.searchAnnessi(keyword);
-  //   });
-  // }
-
-
-    // searchAnnessi(keyword: string): void {
-  //   if (keyword) {
-  //     this.annessiService.searchAnnessi(keyword).subscribe(
-  //       (data: AnnessoModel[]) => {
-  //         this.listaAnnessi = data;
-  //         this.errorMessage = '';
-  //       },
-  //       error => {
-  //         this.listaAnnessi = [];
-  //         this.errorMessage = error;
-  //       }
-  //     );
-  //   } else {
-  //     // Se il campo di ricerca è vuoto, ricarica i dati originali
-  //     this.annessiService.getListaAnnessi$().subscribe({
-  //       next: (result: AnnessoModel[]) => {
-  //         this.listaAnnessi = result;
-  //         this.errorMessage = '';
-  //       },
-  //       error: err => this.errorMessage = err
-  //     });
-  //   }
-  // }
 
   openDialogImmobile(immobile: ImmobileModel) {
     this.dialogComponent.listaImmobili = immobile;

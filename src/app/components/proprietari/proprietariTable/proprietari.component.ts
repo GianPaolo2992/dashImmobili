@@ -5,7 +5,9 @@ import {ImmobileDialogComponent} from '../../immobli/immobile-dialog/immobile-di
 import {ImmobileModel} from '../../../models/immobile.model';
 import {RouterLink} from '@angular/router';
 import {ProprietarioUpdateFormComponent} from '../proprietario-update-form/proprietario-update-form.component';
-import {Subscription} from 'rxjs';
+import {debounceTime, Subscription, switchMap} from 'rxjs';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {NgForOf, NgIf} from '@angular/common';
 
 
 
@@ -15,6 +17,9 @@ import {Subscription} from 'rxjs';
     ImmobileDialogComponent,
     RouterLink,
     ProprietarioUpdateFormComponent,
+    NgIf,
+    ReactiveFormsModule,
+    NgForOf,
 
   ],
   templateUrl: './proprietari.component.html',
@@ -30,6 +35,8 @@ export class ProprietariComponent implements OnInit, OnDestroy {
   listProp?: ProprietarioModel[];
   selectedProp?: ProprietarioModel;
   deletedProp?:ProprietarioModel;
+  searchInput = new FormControl('');
+  errorMessage ='';
 
   @ViewChild(ImmobileDialogComponent) modalComponent!: ImmobileDialogComponent;
   @ViewChild(ProprietarioUpdateFormComponent) dialogUpdateForm!: ProprietarioUpdateFormComponent;
@@ -38,16 +45,19 @@ export class ProprietariComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription.add(
       this.proprietarioService.getListaProprietari$().subscribe({
-          next: props => {
-            this.listProp = props
-          },
-          error: error => {
-            console.log(error);
-          }
-        }
+        next: (props: ProprietarioModel[]) => {
+          this.listProp = props;
+        },
+        error: error => this.errorMessage = error
+      })
+    );
+    this.proprietarioService.getAllProprietari().subscribe()
+    this.searchInput.valueChanges
+      .pipe(
+        debounceTime(200),
+        switchMap(text => this.proprietarioService.searchProp(text || ''))
       )
-    )
-    this.proprietarioService.getAllProprietari().subscribe();
+      .subscribe(searchResult => this.listProp = searchResult);
   }
 
   openDialogImmobili(Immobili: ImmobileModel[]) {
