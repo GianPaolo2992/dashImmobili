@@ -23,7 +23,7 @@
     </thead>
     <tbody>
 <!--      @for(prop of listProp; track prop.id){-->
-        <tr *ngFor="let prop of listProp">
+        <tr *ngFor="let prop of listProp! | paginate: { itemsPerPage: 10, currentPage: currentPage }">
           <th scope="row" class="d-flex justify-content-evenly">
             <button class="btn btn-dark" (click)="openDialogUpdate(prop)"><i class="fa-solid fa-pen-nib" style="color: #fff000;"></i></button>
             <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="selectDeleteProp(prop)" ><i class="fa-solid fa-trash" style="color: #FF0000;"></i></button>
@@ -35,6 +35,8 @@
             {{  prop.listaImmobiliDTO.length }}
           </td>
         </tr>
+
+<pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
 <!--      }-->
 
     </tbody>

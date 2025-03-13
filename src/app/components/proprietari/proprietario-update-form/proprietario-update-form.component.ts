@@ -17,6 +17,7 @@ import {ImmobileService} from '../../../services/immobile.service';
 import {CommonModule, NgIf} from '@angular/common';
 import {ProprietarioService} from '../../../services/proprietario.service';
 import {IDropdownSettings, NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
+import {AuthService} from '../../../services/auth.service';
 
 @Component({
   selector: 'app-proprietario-update-form',
@@ -42,6 +43,7 @@ export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnCha
   private fb = inject(FormBuilder);
 
 
+
   propUpdateForm!: FormGroup;
   listaImmobile: ImmobileModel[] = []; // getAll immobili
   listaImmobiliUnica: ImmobileModel[] = [];  // filtrato per proprietari null
@@ -51,6 +53,7 @@ export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnCha
 
 
   ngOnInit(): void {
+
     this.subscription.add(
       this.immobileService.getListaImmobili$().subscribe({
         next: (data: ImmobileModel[]) => {
@@ -83,6 +86,7 @@ export class ProprietarioUpdateFormComponent implements OnInit, OnDestroy, OnCha
   }
 
   openDialog() {
+
     const dialogElement = this.dialog?.nativeElement;
     dialogElement?.show();
     setTimeout(() => {

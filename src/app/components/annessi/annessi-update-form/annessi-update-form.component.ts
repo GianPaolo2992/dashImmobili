@@ -7,6 +7,7 @@ import {ImmobileModel} from '../../../models/immobile.model';
 import {Subscription} from 'rxjs';
 import {ImmobileService} from '../../../services/immobile.service';
 import {ANNESSI_OPTIONS, Option} from '../../../constants/options';
+import {AuthService} from '../../../services/auth.service';
 
 
 @Component({
@@ -71,6 +72,7 @@ export class AnnessiUpdateFormComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   openDialog() {
+
     const dialogElement = this.dialog?.nativeElement;
     dialogElement?.show();
 

@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, Observable, tap} from "rxjs";
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {BehaviorSubject, catchError, Observable, tap, throwError} from "rxjs";
 import {ImmobileModel} from "../models/immobile.model";
 
 @Injectable({
@@ -41,5 +41,21 @@ export class ImmobileService {
     return  this.http.delete<ImmobileModel>(`${this.delete}/${id}`);
   }
 
-
+  searchImmobile(keyword: string): Observable<ImmobileModel[]> {
+    return this.http.get<ImmobileModel[]>(`${this.baseUrl}/search?keyword=${keyword}`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Errore del client
+      errorMessage = `An error occurred: ${error.error.message}`;
+    } else {
+      // Errore del server
+      errorMessage = `Server returned code: ${error.status}, error message is: ${error.message}`;
+    }
+    return throwError(errorMessage);
+  }
 }

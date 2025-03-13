@@ -1,17 +1,20 @@
-import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ImmobileModel} from '../../../models/immobile.model';
 import {ImmobileService} from '../../../services/immobile.service';
-import {CurrencyPipe, NgForOf} from '@angular/common';
+import {CurrencyPipe, NgForOf, NgIf} from '@angular/common';
 import {ProprietarioDialogComponent} from '../../proprietari/proprietario-dialog/proprietario-dialog.component';
 import {ProprietarioModel} from '../../../models/proprietario.model';
 import {AnnessoModel} from '../../../models/annesso.model';
 import {AnnessoDialogComponent} from '../../annessi/annesso-dialog/annesso-dialog.component';
 import {RouterLink} from '@angular/router';
-import {Subscription} from 'rxjs';
+import {debounceTime, Subscription, switchMap} from 'rxjs';
 import {ImmobileUpdateFormComponent} from '../immobile-update-form/immobile-update-form.component';
 import {SquareMeterPipe} from '../../../pipes/square-meter.pipe';
 import {AnnessoService} from '../../../services/annesso.service';
 import {ProprietarioService} from '../../../services/proprietario.service';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {NgxPaginationModule} from 'ngx-pagination';
+import {AuthService} from '../../../services/auth.service';
 
 @Component({
   selector: 'app-immobiliTable',
@@ -22,25 +25,32 @@ import {ProprietarioService} from '../../../services/proprietario.service';
     RouterLink,
     ImmobileUpdateFormComponent,
     CurrencyPipe,
-    SquareMeterPipe
+    SquareMeterPipe,
+    FormsModule,
+    NgIf,
+    ReactiveFormsModule,
+    NgxPaginationModule
   ],
   templateUrl: './immobili.component.html',
-  styleUrl: './immobili.component.css'
+  styleUrl: './immobili.component.css',
+  encapsulation: ViewEncapsulation.None,
 })
 export class ImmobiliComponent implements OnInit, OnDestroy {
   private immobileService = inject(ImmobileService);
   private proprietarioService = inject(ProprietarioService);
   private annessoService = inject(AnnessoService);
+  private authService = inject(AuthService);
   private subscription: Subscription = new Subscription();
   @ViewChild(ProprietarioDialogComponent) dialogPropComponent!: ProprietarioDialogComponent;
   @ViewChild(AnnessoDialogComponent) dialogAnnesiComponent!: AnnessoDialogComponent;
   @ViewChild(ImmobileUpdateFormComponent) dialogUpdateComponent!: ImmobileUpdateFormComponent;
 
-
+  currentPage: number = 1;
   listaImmobili?: ImmobileModel[];
   selectedImmobile?: ImmobileModel;
 immobileDeleted?: ImmobileModel;
-
+  searchInput = new FormControl('');
+  errorMessage ='';
   ngOnInit() {
     this.subscription.add(
       this.immobileService.getListaImmobili$().subscribe({
@@ -53,7 +63,13 @@ immobileDeleted?: ImmobileModel;
 
       })
     );
-    this.refreshData()
+    this.refreshData();
+    this.searchInput.valueChanges
+      .pipe(
+        debounceTime(200),
+        switchMap(text => this.immobileService.searchImmobile(text || ''))
+      )
+      .subscribe(searchResult => this.listaImmobili = searchResult);
   }
 
   refreshData() {
@@ -74,6 +90,10 @@ immobileDeleted?: ImmobileModel;
   }
 
   openDialogUpdate(immobile: ImmobileModel) {
+    if (!this.authService.isLoggedIn()) {
+      alert('Devi essere loggato per eseguire questa operazione.');
+      return;
+    }
     this.selectedImmobile = immobile;
     console.log(this.selectedImmobile);
     this.dialogUpdateComponent.openDialog();
@@ -87,6 +107,11 @@ immobileDeleted?: ImmobileModel;
   }
 
   deleteimmobile(immobileId: number) {
+
+    if (!this.authService.isLoggedIn()) {
+      alert('Devi essere loggato per eseguire questa operazione.');
+      return;
+    }
     this.immobileService.deleteImmobile(immobileId).subscribe({
       next: (result) => {
         console.log('immobile deletato:' + JSON.stringify(result));

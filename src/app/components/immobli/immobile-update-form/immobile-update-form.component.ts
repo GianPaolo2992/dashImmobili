@@ -21,6 +21,7 @@ import {ImmobileService} from '../../../services/immobile.service';
 import {IMMOBILI_OPTIONS, Option} from '../../../constants/options';
 
 import {IDropdownSettings, NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
+import {AuthService} from '../../../services/auth.service';
 
 @Component({
   selector: 'app-immobile-update-form',
@@ -44,6 +45,8 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
   private proprietarioService = inject(ProprietarioService);
   private annessoService = inject(AnnessoService);
 
+
+
   private subscription: Subscription = new Subscription();
   immobiliOptions: Option[] = IMMOBILI_OPTIONS;
 
@@ -61,6 +64,7 @@ export class ImmobileUpdateFormComponent implements OnInit, OnDestroy, OnChanges
 
 
   ngOnInit(): void {
+
     this.subscription.add(
       combineLatest([
         this.proprietarioService.getListaProprietari$(),

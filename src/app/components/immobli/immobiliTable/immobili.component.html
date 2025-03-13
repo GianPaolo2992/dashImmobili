@@ -1,5 +1,16 @@
-<button class="btn btn-success ms-5 mt-5" routerLink="/immobiliForm"><i class="fa-solid fa-plus"></i></button>
+<div class="row justify-content-between flex-row px-3 ">
+  <div class="col-6 align-content-end ps-3">
+    <input type="text"  [formControl]="searchInput" placeholder="Enter keyword" />
+  </div>
 
+
+  <div class="col-6 d-flex justify-content-end align-content-end pe-3 ">
+    <button class="btn btn-success ms-5 mt-5" routerLink="/immobiliForm"><i class="fa-solid fa-plus"></i></button>
+  </div>
+</div>
+<div *ngIf="errorMessage">
+  <p class="error">{{ errorMessage }}</p>
+</div>
 <div class="d-flex justify-content-center align-items-center flex-direction-column">
   <table class="table table-bordered  table-hover m-3">
     <thead>
@@ -16,7 +27,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let immobile of listaImmobili">
+    <tr *ngFor="let immobile of listaImmobili! | paginate: { itemsPerPage: 10, currentPage: currentPage }">
       <th scope="row" class="d-flex justify-content-evenly">
         <button class=" btn btn-dark" (click)="openDialogUpdate(immobile)"><i
           class="fa-solid fa-pen-nib shadow" style="color:  #fff000;"></i></button>
@@ -36,6 +47,7 @@
       <td (click)="openDialogAnnessi( immobile.listaAnnessiDTO)">{{ immobile.listaAnnessiDTO.length }}</td>
 
     </tr>
+    <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
     </tbody>
   </table>
 </div>

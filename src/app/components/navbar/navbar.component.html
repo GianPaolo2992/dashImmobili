@@ -39,6 +39,15 @@
       <li class="nav-item">
         <a class="nav-link" routerLink="/annessiTable" routerLinkActive="active">Annessi</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/register" *ngIf="!authService.getToken()" routerLinkActive="active">Registrati</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" *ngIf="!authService.getToken()" routerLink="/login" routerLinkActive="active">Accedi</a>
+      </li>
+      <li class="nav-item">
+      <a class="nav-link" *ngIf="authService.getToken()"><i (click)="logout()"  class="fa-solid fa-right-from-bracket"></i></a>
+      </li>
     </ul>
   </div>
 </nav>

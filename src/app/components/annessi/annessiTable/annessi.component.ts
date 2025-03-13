@@ -8,10 +8,11 @@ import {ImmobileModel} from '../../../models/immobile.model';
 import {ImmobileDialogComponent} from '../../immobli/immobile-dialog/immobile-dialog.component';
 import { RouterLink, RouterOutlet} from '@angular/router';
 import {AnnessiUpdateFormComponent} from '../annessi-update-form/annessi-update-form.component';
-// import {debounceTime, distinctUntilChanged, fromEvent, map, Subscription} from 'rxjs';
   import {debounceTime, Subscription, switchMap} from 'rxjs';
 import {SquareMeterPipe} from '../../../pipes/square-meter.pipe';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {NgxPaginationModule} from 'ngx-pagination';
+import {AuthService} from '../../../services/auth.service';
 
 
 
@@ -29,6 +30,7 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
     SquareMeterPipe,
     NgIf,
     ReactiveFormsModule,
+    NgxPaginationModule,
   ],
   templateUrl: './annessi.component.html',
   styleUrl: './annessi.component.css'
@@ -36,16 +38,18 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
 export class AnnessiComponent implements OnInit,OnDestroy {
 
   private annessiService = inject(AnnessoService);
+  private authService = inject(AuthService);
   // listaAnnessi = this.annessiService.listaAnnessi$;
-  listaAnnessi?: AnnessoModel[];
-  selectedAnnesso?: AnnessoModel;
+  listaAnnessi?: AnnessoModel[]; //getall
+  selectedAnnesso?: AnnessoModel;//annesso selezionato
 private subscription:Subscription = new Subscription()
   @ViewChild(ImmobileDialogComponent) dialogComponent!: ImmobileDialogComponent;
   @ViewChild(AnnessiUpdateFormComponent) dialogUpdateFormAnnessi!: AnnessiUpdateFormComponent;
   // @ViewChild('searchInput', { static: false }) searchInput?: ElementRef;
   // results: AnnessoModel[] = [];
   errorMessage: string = '';
-searchInput = new FormControl('');
+searchInput = new FormControl('');//input della search
+  currentPage: number = 1;//paginator
 
 
   ngOnInit(): void {
@@ -74,6 +78,10 @@ searchInput = new FormControl('');
   }
 
   opendialogUpdate(annesso: AnnessoModel) {
+    if (!this.authService.isLoggedIn()) {
+      alert('Devi essere loggato per eseguire questa operazione.');
+      return;
+    }
     this.selectAnnesso(annesso)
     this.dialogUpdateFormAnnessi.openDialog();
   }
@@ -82,6 +90,10 @@ searchInput = new FormControl('');
 
   }
 deleteAnnesso(annessoId: number) {
+  if (!this.authService.isLoggedIn()) {
+    alert('Devi essere loggato per eseguire questa operazione.');
+    return;
+  }
     this.annessiService.deleteAnnesso(annessoId).subscribe({
       next: (data) => {
         console.log('annesso eliminato: ', data);

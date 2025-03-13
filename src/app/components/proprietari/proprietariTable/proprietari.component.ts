@@ -6,8 +6,10 @@ import {ImmobileModel} from '../../../models/immobile.model';
 import {RouterLink} from '@angular/router';
 import {ProprietarioUpdateFormComponent} from '../proprietario-update-form/proprietario-update-form.component';
 import {debounceTime, Subscription, switchMap} from 'rxjs';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
+import {NgxPaginationModule} from 'ngx-pagination';
+import {AuthService} from '../../../services/auth.service';
 
 
 
@@ -20,6 +22,7 @@ import {NgForOf, NgIf} from '@angular/common';
     NgIf,
     ReactiveFormsModule,
     NgForOf,
+    NgxPaginationModule
 
   ],
   templateUrl: './proprietari.component.html',
@@ -27,9 +30,12 @@ import {NgForOf, NgIf} from '@angular/common';
 })
 
 
+
+
 export class ProprietariComponent implements OnInit, OnDestroy {
 
   private proprietarioService = inject(ProprietarioService);
+  private authService = inject(AuthService);
   private subscription: Subscription = new Subscription();
 
   listProp?: ProprietarioModel[];
@@ -41,6 +47,7 @@ export class ProprietariComponent implements OnInit, OnDestroy {
   @ViewChild(ImmobileDialogComponent) modalComponent!: ImmobileDialogComponent;
   @ViewChild(ProprietarioUpdateFormComponent) dialogUpdateForm!: ProprietarioUpdateFormComponent;
 
+  currentPage: number = 1;
 
   ngOnInit(): void {
     this.subscription.add(
@@ -66,6 +73,10 @@ export class ProprietariComponent implements OnInit, OnDestroy {
   }
 
   openDialogUpdate(proprietario: ProprietarioModel) {
+    if (!this.authService.isLoggedIn()) {
+      alert('Devi essere loggato per eseguire questa operazione.');
+      return;
+    }
     this.selectedProp = proprietario;
     this.dialogUpdateForm.openDialog();
   }
@@ -79,6 +90,10 @@ export class ProprietariComponent implements OnInit, OnDestroy {
   }
 
   deleteProp(id: number) {
+    if (!this.authService.isLoggedIn()) {
+      alert('Devi essere loggato per eseguire questa operazione.');
+      return;
+    }
     this.proprietarioService.deleteProp(id).subscribe({
       next: (result) => {
         console.log('proprietario elinìminato:' + result);
