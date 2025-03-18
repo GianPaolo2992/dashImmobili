@@ -11,3 +11,11 @@ input{
   border: 1px solid gray;
   background-color: white;
 }
+
+.mobile-class{
+  font-size: 14px;
+}
+.desktop-class{
+  font-size: 16px;
+}
+

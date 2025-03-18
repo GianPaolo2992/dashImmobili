@@ -1,75 +1,94 @@
-<div class="row justify-content-between flex-row px-3 ">
-  <div class="col-6 align-content-end ps-3">
-    <input type="text"  [formControl]="searchInput" placeholder="Enter keyword" />
-  </div>
+<div class="container-fluid d-flex justify-content-center align-items-center ">
+  <div class="row w-100">
+    <div class="col-11 mx-auto  ">
+      <div class="row justify-content-between flex-row px-3">
+        <div class="col-6 align-content-end ps-3">
+          <input type="text" [formControl]="searchInput" placeholder="Enter keyword"/>
+        </div>
 
 
-  <div class="col-6 d-flex justify-content-end align-content-end pe-3 ">
-    <button class="btn btn-success ms-5 mt-5" routerLink="/proprietariForm"><i class="fa-solid fa-plus"></i></button>
-  </div>
-</div>
-<div *ngIf="errorMessage">
-  <p class="error">{{ errorMessage }}</p>
-</div>
-<div class="d-flex justify-content-center align-items-center flex-direction-column">
-  <table class="table table-bordered  table-hover m-3">
-    <thead>
-    <tr>
-      <th scope="col">azioni</th>
-      <th scope="col">nome</th>
-      <th scope="col">cognome</th>
-      <th scope="col">Tot Immobili</th>
-    </tr>
-    </thead>
-    <tbody>
-<!--      @for(prop of listProp; track prop.id){-->
-        <tr *ngFor="let prop of listProp! | paginate: { itemsPerPage: 10, currentPage: currentPage }">
-          <th scope="row" class="d-flex justify-content-evenly">
-            <button class="btn btn-dark" (click)="openDialogUpdate(prop)"><i class="fa-solid fa-pen-nib" style="color: #fff000;"></i></button>
-            <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="selectDeleteProp(prop)" ><i class="fa-solid fa-trash" style="color: #FF0000;"></i></button>
-
-          </th>
-          <td>{{prop.nome}}</td>
-          <td>{{prop.cognome}}</td>
-          <td  (click)="openDialogImmobili(prop.listaImmobiliDTO)">
-            {{  prop.listaImmobiliDTO.length }}
-          </td>
-        </tr>
-
-<pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
-<!--      }-->
-
-    </tbody>
-  </table>
-
-</div>
-
-<!--//modale conferma delete-->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="col-6 d-flex justify-content-end align-content-end pe-3 ">
+          <button class="btn btn-success ms-5 mt-5" routerLink="/proprietariForm"><i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
       </div>
-      <div class="modal-body text-dark">
-        confermi di voler eliminare questo proprietario?
-        <ul>
-          <p class="m-0 mt-3"><small>nome</small></p>
-          <li>{{deletedProp?.nome }}</li>
-          <p class="m-0 mt-3"><small>cognome</small></p>
-          <li>{{deletedProp?.cognome }}</li>
-        </ul>
+      <div *ngIf="errorMessage">
+        <p class="error">{{ errorMessage }}</p>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteProp(deletedProp!.id!)">Elimina</button>
+<!--      <div class="d-flex justify-content-center align-items-center flex-direction-column">-->
+      <div [ngClass]="{
+  'd-flex justify-content-center align-items-center flex-column': !isMobile,
+  'table-responsive': isMobile,
+  'mobile-class': isMobile,
+  'desktop-class': !isMobile
+}">
+
+      <table class="table table-bordered  table-hover ">
+          <thead>
+          <tr>
+            <th scope="col">azioni</th>
+            <th scope="col">nome</th>
+            <th scope="col">cognome</th>
+            <th scope="col">Tot Immobili</th>
+          </tr>
+          </thead>
+          <tbody>
+          <!--      @for(prop of listProp; track prop.id){-->
+          <tr *ngFor="let prop of listProp! | paginate: { itemsPerPage: 10, currentPage: currentPage }">
+            <th scope="row" class="d-flex justify-content-evenly">
+              <button class=" btn btn-sm btn-dark" (click)="openDialogUpdate(prop)"><i class="fa-solid fa-pen-nib"
+                                                                               style="color: #fff000;"></i></button>
+              <button class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                      (click)="selectDeleteProp(prop)"><i class="fa-solid fa-trash" style="color: #FF0000;"></i>
+              </button>
+
+            </th>
+            <td>{{ prop.nome }}</td>
+            <td>{{ prop.cognome }}</td>
+            <td (click)="openDialogImmobili(prop.listaImmobiliDTO)">
+              {{ prop.listaImmobiliDTO.length }}
+            </td>
+          </tr>
+
+          <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+          <!--      }-->
+
+          </tbody>
+        </table>
+
       </div>
+
+      <!--//modale conferma delete-->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-dark">
+              confermi di voler eliminare questo proprietario?
+              <ul>
+                <p class="m-0 mt-3"><small>nome</small></p>
+                <li>{{ deletedProp?.nome }}</li>
+                <p class="m-0 mt-3"><small>cognome</small></p>
+                <li>{{ deletedProp?.cognome }}</li>
+              </ul>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                      (click)="deleteProp(deletedProp!.id!)">Elimina
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <app-immobile-dialog></app-immobile-dialog>
+
+      <app-proprietario-update-form [proprietario]="selectedProp"></app-proprietario-update-form>
+
     </div>
   </div>
 </div>
-
-<app-immobile-dialog ></app-immobile-dialog>
-
-  <app-proprietario-update-form [proprietario]="selectedProp"></app-proprietario-update-form>
-

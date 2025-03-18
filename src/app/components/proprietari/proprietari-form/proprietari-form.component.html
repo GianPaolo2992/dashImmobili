@@ -1,51 +1,57 @@
-<form [formGroup]="proprietariForm" (ngSubmit)="onSubmit()">
-  <h3 class=" text-center">crea un nuovo proprietario</h3>
-  <div>
-    <label for="nome">Nome:</label>
-    <input id="nome" class="styleInputText" type="text" formControlName="nome">
-    <div class="error" *ngIf="!isValid && proprietariForm.get('nome')?.invalid ">
-      Nome è obbligatorio.
-    </div>
-  </div>
-  <div>
-    <label for="cognome">Cognome:</label>
-    <input id="cognome"  class="styleInputText" type="text" formControlName="cognome">
-    <div class="error" *ngIf="!isValid && proprietariForm.get('cognome')?.invalid ">
-      Cognome è obbligatorio.
-
-    </div>
-  </div>
-  <div>
-    <label>Immobili Disponibili:</label>
-    <div class="d-flex justify-content-center align-items-center">
-      <div class="row box ">
-        <div class="col-12">
-          <ng-multiselect-dropdown class="my-custom-multiselect-dropdown"
-            [settings]="dropdownSettings"
-            [data]="listaImmobiliNOProp"
-            formControlName="listaImmobiliDTO"
-            (onSelect)="onItemSelect($event)"
-            (onDeSelect)="onItemDeSelect($event)"
-            (onSelectAll)="onSelectAll($event)">
-          </ng-multiselect-dropdown>
+<div class="container-fluid d-flex justify-content-center align-items-center ">
+  <div class="row w-100 justify-content-center align-items-center ">
+    <div class="col-11">
+      <form [formGroup]="proprietariForm" (ngSubmit)="onSubmit()">
+        <h3 class=" text-center">crea un nuovo proprietario</h3>
+        <div>
+          <label for="nome">Nome:</label>
+          <input id="nome" class="styleInputText" type="text" formControlName="nome">
+          <div class="error" *ngIf="!isValid && proprietariForm.get('nome')?.invalid ">
+            Nome è obbligatorio.
+          </div>
         </div>
-      </div>
-    </div>
-<!--    <h5>Immobili Diponibili:</h5>-->
-<!--    <div class="row box-over-flow">-->
-<!--      <div class="col-4 form-check d-flex justify-content-center align-items-center"-->
-<!--           *ngFor="let immobile of listaImmobiliNOProp; let i = index">-->
-<!--        <input class="form-check-input m-2" type="checkbox" [id]="'noPropCheck' + i"-->
-<!--               (change)="onCheckboxChange($event, immobile)">-->
-<!--        <label class="form-check-label" [for]="'noPropCheck' + i">-->
-<!--          {{ immobile.tipo }}-->
-<!--        </label>-->
-<!--      </div>-->
-<!--    </div>-->
-    <div class="d-flex flex-row justify-content-evenly">
-      <button type="submit">invia</button>
-      <button routerLink="/proprietariTable">indietro</button>
+        <div>
+          <label for="cognome">Cognome:</label>
+          <input id="cognome" class="styleInputText" type="text" formControlName="cognome">
+          <div class="error" *ngIf="!isValid && proprietariForm.get('cognome')?.invalid ">
+            Cognome è obbligatorio.
+
+          </div>
+        </div>
+        <div>
+          <label>Immobili Disponibili:</label>
+          <div class="d-flex justify-content-center align-items-center">
+            <div class="row box ">
+              <div class="col-12">
+                <ng-multiselect-dropdown class="my-custom-multiselect-dropdown"
+                                         [settings]="dropdownSettings"
+                                         [data]="listaImmobiliNOProp"
+                                         formControlName="listaImmobiliDTO"
+                                         (onSelect)="onItemSelect($event)"
+                                         (onDeSelect)="onItemDeSelect($event)"
+                                         (onSelectAll)="onSelectAll($event)">
+                </ng-multiselect-dropdown>
+              </div>
+            </div>
+          </div>
+          <!--    <h5>Immobili Diponibili:</h5>-->
+          <!--    <div class="row box-over-flow">-->
+          <!--      <div class="col-4 form-check d-flex justify-content-center align-items-center"-->
+          <!--           *ngFor="let immobile of listaImmobiliNOProp; let i = index">-->
+          <!--        <input class="form-check-input m-2" type="checkbox" [id]="'noPropCheck' + i"-->
+          <!--               (change)="onCheckboxChange($event, immobile)">-->
+          <!--        <label class="form-check-label" [for]="'noPropCheck' + i">-->
+          <!--          {{ immobile.tipo }}-->
+          <!--        </label>-->
+          <!--      </div>-->
+          <!--    </div>-->
+          <div class="d-flex flex-row justify-content-evenly">
+            <button type="submit">invia</button>
+            <button routerLink="/proprietariTable">indietro</button>
+          </div>
+        </div>
+      </form>
+
     </div>
   </div>
-</form>
-
+</div>

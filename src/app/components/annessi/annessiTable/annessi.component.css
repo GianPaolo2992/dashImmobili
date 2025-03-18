@@ -2,14 +2,22 @@ tr:hover {
   transform: scale(1.01);
 
 }
-tr{
+
+tr {
   transition-duration: 0.4s;
 }
-input{
-   padding:10px;
-   border-radius: 4px;
-   border: 1px solid gray;
-   background-color: white;
- }
+
+input {
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid gray;
+  background-color: white;
+}
 
 
+.mobile-class{
+  font-size: 14px;
+}
+.desktop-class{
+  font-size: 16px;
+}

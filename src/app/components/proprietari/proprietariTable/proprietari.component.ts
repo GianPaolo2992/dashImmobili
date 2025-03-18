@@ -5,11 +5,12 @@ import {ImmobileDialogComponent} from '../../immobli/immobile-dialog/immobile-di
 import {ImmobileModel} from '../../../models/immobile.model';
 import {RouterLink} from '@angular/router';
 import {ProprietarioUpdateFormComponent} from '../proprietario-update-form/proprietario-update-form.component';
-import {debounceTime, Subscription, switchMap} from 'rxjs';
+import {combineLatest, debounceTime, Subscription, switchMap} from 'rxjs';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {NgxPaginationModule} from 'ngx-pagination';
 import {AuthService} from '../../../services/auth.service';
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 
 
 
@@ -22,7 +23,8 @@ import {AuthService} from '../../../services/auth.service';
     NgIf,
     ReactiveFormsModule,
     NgForOf,
-    NgxPaginationModule
+    NgxPaginationModule,
+    NgClass
 
   ],
   templateUrl: './proprietari.component.html',
@@ -36,6 +38,7 @@ export class ProprietariComponent implements OnInit, OnDestroy {
 
   private proprietarioService = inject(ProprietarioService);
   private authService = inject(AuthService);
+  private breakpointObserver = inject(BreakpointObserver);
   private subscription: Subscription = new Subscription();
 
   listProp?: ProprietarioModel[];
@@ -44,18 +47,28 @@ export class ProprietariComponent implements OnInit, OnDestroy {
   searchInput = new FormControl('');
   errorMessage ='';
 
+  isMobile = false;
   @ViewChild(ImmobileDialogComponent) modalComponent!: ImmobileDialogComponent;
   @ViewChild(ProprietarioUpdateFormComponent) dialogUpdateForm!: ProprietarioUpdateFormComponent;
 
   currentPage: number = 1;
 
   ngOnInit(): void {
+    // this.subscription.add(
+    //   this.proprietarioService.getListaProprietari$().subscribe({
+    //     next: (props: ProprietarioModel[]) => {
+    //       this.listProp = props;
+    //     },
+    //     error: error => this.errorMessage = error
+    //   })
+    // );
     this.subscription.add(
-      this.proprietarioService.getListaProprietari$().subscribe({
-        next: (props: ProprietarioModel[]) => {
-          this.listProp = props;
-        },
-        error: error => this.errorMessage = error
+      combineLatest([
+        this.proprietarioService.getListaProprietari$(),  // Chiamata API
+        this.breakpointObserver.observe([Breakpoints.Small, Breakpoints.Handset]) // Controllo viewport
+      ]).subscribe(([prop, breakpoint]) => {
+        this.listProp = prop;
+        this.isMobile = breakpoint.matches;
       })
     );
     this.proprietarioService.getAllProprietari().subscribe()

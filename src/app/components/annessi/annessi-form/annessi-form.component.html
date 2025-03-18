@@ -1,46 +1,50 @@
+<div class="container-fluid d-flex justify-content-center align-items-center ">
+  <div class="row w-100 justify-content-center align-items-center">
+    <div class="col-11">
+      <form [formGroup]="annessiForm" (ngSubmit)="onSubmit()">
+        <h3 class="text-center">inserisci un annesso</h3>
+        <div>
+          <label for="tipo">Tipo:</label>
+          <select id="tipo" type="select" formControlName="tipo">
+            <option value="" disabled selected>Scegli un tipo...</option>
+
+            <option *ngFor="let option of annessiOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+
+          </select>
+          <div class="error" *ngIf="!isValid && annessiForm.get('tipo')?.invalid  ">
+            Tipo è obbligatorio.
+          </div>
+        </div>
+        <div>
+          <label for="superficie">Superficie:</label>
+          <div class="position-relative">
+            <input id="superficie" class="styleInputText" type="number" formControlName="superficie">
+            <span class="euro-symbol">m²</span>
+          </div>
+          <div class="error" *ngIf="!isValid && annessiForm.get('superficie')?.invalid  ">
+            superficie è obbligatorio.
+          </div>
+        </div>
+        <div>
+          <label for="immobileDTO">immobile: <small> (facoltativo)</small></label>
+          <select id="immobileDTO" type="select" formControlName="immobileDTO">
+            <option [value]="null" disabled selected hidden>Scegli un Immobile...</option>
+            <option *ngFor="let immobile of listaImmobili" [value]="serializeImmobile(immobile)">
+              {{ immobile.tipo }} | prop : {{ immobile.proprietariDTO ? immobile.proprietariDTO.cognome : 'ND' }}
+            </option>
+          </select>
+
+        </div>
+        <div class="d-flex justify-content-evenly ">
+          <button type="submit">invia</button>
+          <button routerLink="/annessiTable">indietro</button>
+        </div>
 
 
-<form [formGroup]="annessiForm" (ngSubmit)="onSubmit()">
-  <h3 class="text-center">inserisci un annesso</h3>
-  <div>
-    <label for="tipo">Tipo:</label>
-    <select id="tipo" type="select" formControlName="tipo">
-      <option value="" disabled selected>Scegli un tipo...</option>
+      </form>
 
-      <option *ngFor="let option of annessiOptions" [value]="option.value">
-        {{ option.label }}
-      </option>
-
-    </select>
-    <div class="error" *ngIf="!isValid && annessiForm.get('tipo')?.invalid  ">
-      Tipo è obbligatorio.
     </div>
   </div>
-  <div>
-    <label for="superficie">Superficie:</label>
-    <div class="position-relative">
-      <input id="superficie" class="styleInputText" type="number" formControlName="superficie">
-      <span class="euro-symbol">m²</span>
-    </div>
-    <div class="error" *ngIf="!isValid && annessiForm.get('superficie')?.invalid  ">
-      superficie è obbligatorio.
-    </div>
-  </div>
-  <div>
-    <label for="immobileDTO">immobile: <small> (facoltativo)</small></label>
-    <select id="immobileDTO" type="select" formControlName="immobileDTO">
-      <option [value]="null" disabled selected hidden>Scegli un Immobile...</option>
-      <option *ngFor="let immobile of listaImmobili" [value]="serializeImmobile(immobile)">
-        {{ immobile.tipo }} | prop : {{ immobile.proprietariDTO ? immobile.proprietariDTO.cognome : 'ND' }}
-      </option>
-    </select>
-
-  </div>
-  <div class="d-flex justify-content-evenly ">
-    <button type="submit">invia</button>
-    <button routerLink="/annessiTable">indietro</button>
-  </div>
-
-
-</form>
-
+</div>

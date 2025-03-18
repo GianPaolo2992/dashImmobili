@@ -1,13 +1,39 @@
+<!--<form (submit)="login()">-->
+<!--  <h2 [ngStyle]="{textAlign:'center', margin:'1em'}">Login</h2>-->
+<!--  <label>Username:</label>-->
+<!--  <input class="styleInputText" type="text" [(ngModel)]="credentials.username" name="username" required />-->
 
-<form (submit)="login()">
-  <h2 [ngStyle]="{textAlign:'center', margin:'1em'}">Login</h2>
-  <label>Username:</label>
-  <input class="styleInputText" type="text" [(ngModel)]="credentials.username" name="username" required />
+
+<!--  <label>Password:</label>-->
+<!--  <input class="styleInputText" type="password" [(ngModel)]="credentials.password" name="password" required />-->
+
+<!--  <button type="submit">Accedi</button>-->
+<!--</form>-->
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="row w-100">
+    <div class="col-md-8 col-lg-6 mx-auto">
+
+      <form [formGroup]="LoginForm" (ngSubmit)="login()">
+        <h2 [ngStyle]="{textAlign:'center', margin:'1em'}">Login</h2>
+        <label for="username">Username:</label>
+        <input id="username" class="styleInputText" type="text" formControlName="username"/>
+
+        <!--  <input class="styleInputText" type="text" [(ngModel)]="user.username" name="username" required />-->
+        <div *ngIf="LoginForm?.get('username')?.invalid && !ValidateForm" class="error">
+          ⚠️ Il nome utente deve avere almeno 3 caratteri
+        </div>
 
 
-  <label>Password:</label>
-  <input class="styleInputText" type="password" [(ngModel)]="credentials.password" name="password" required />
+        <label for="password">Password:</label>
+        <input id="password" class="styleInputText" type="password" formControlName="password"/>
+        <!--  <input class="styleInputText" type="password" [(ngModel)]="user.password" name="password" required />-->
+        <div *ngIf="LoginForm?.get('password')?.invalid && !ValidateForm" class="error">
+          ⚠️ la password deve essere di 8 caratteri
+        </div>
 
-  <button type="submit">Accedi</button>
-</form>
-
+        <button type="submit">Accedi</button>
+      </form>
+    </div>
+  </div>
+</div>

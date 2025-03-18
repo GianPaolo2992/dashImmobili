@@ -1,108 +1,114 @@
 <dialog #dialog>
+  <div class="container-fluid d-flex justify-content-center align-items-center ">
+    <div class="row w-100">
+      <div class="col-12">
+        <form [formGroup]="immobiliForm" (ngSubmit)="onSubmit()">
+          <h3 class=" text-center">Modifica Immobile {{ immobile?.id }}</h3>
 
-  <form [formGroup]="immobiliForm" (ngSubmit)="onSubmit()">
-    <h3 class=" text-center">Modifica Immobile {{ immobile?.id }}</h3>
+          <div>
+            <label for="tipo">Tipo:</label>
+            <select id="tipo" type="select" formControlName="tipo">
+              <option [ngValue]="immobile?.tipo" disabled selected>{{ immobile?.tipo }}</option>
+              <option class="error" *ngFor="let option of immobiliOptions" [ngValue]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+            <div class="error" *ngIf="!isValid &&  immobiliForm.get('tipo')?.invalid ">
+              campo è obbligatorio.
+            </div>
+          </div>
 
-    <div>
-      <label for="tipo">Tipo:</label>
-      <select id="tipo" type="select" formControlName="tipo">
-        <option [ngValue]="immobile?.tipo" disabled selected>{{ immobile?.tipo }}</option>
-        <option class="error" *ngFor="let option of immobiliOptions" [ngValue]="option.value">
-          {{ option.label }}
-        </option>
-      </select>
-      <div class="error" *ngIf="!isValid &&  immobiliForm.get('tipo')?.invalid ">
-        campo è obbligatorio.
+          <div>
+            <label for="vani">Vani:</label>
+            <input id="vani" class="styleInputText" type="number" formControlName="vani">
+            <div class="error" *ngIf="!isValid &&  immobiliForm.get('vani')?.invalid ">
+              campo è obbligatorio min 1 vano.
+            </div>
+          </div>
+
+          <div>
+            <label for="costo">Costo:</label>
+            <div class="position-relative">
+              <input id="costo" class="styleInputText" type="number" formControlName="costo">
+              <span class="euro-symbol">€ </span>
+            </div>
+            <div class="error" *ngIf="!isValid &&  immobiliForm.get('costo')?.invalid ">
+              campo è obbligatorio.
+            </div>
+          </div>
+
+          <div>
+            <label for="superfice">Superficie:</label>
+            <div class="position-relative">
+              <input id="superfice" class="styleInputText" type="number" formControlName="superfice">
+              <span class="euro-symbol">m²</span>
+            </div>
+            <div class="error" *ngIf="!isValid &&  immobiliForm.get('superfice')?.invalid ">
+              campo è obbligatorio.
+            </div>
+          </div>
+
+          <div>
+            <label for="anno">anno di costruzione:</label>
+            <input id="anno" class="styleInputText" type="number" formControlName="anno">
+            <div class="error" *ngIf="!isValid &&  immobiliForm.get('anno')?.invalid">
+              campo è obbligatorio.
+            </div>
+          </div>
+          <label>Annessi Disponibili:</label>
+          <div class="d-flex justify-content-center align-items-center">
+            <div class="row box p-0">
+              <div class="col-12">
+                <ng-multiselect-dropdown class="my-custom-multiselect-dropdown"
+                                         [settings]="dropdownSettings"
+                                         [data]="listaAnnessiUnica"
+                                         formControlName="listaAnnessiDTO"
+                                         (onSelect)="onItemSelect($event)"
+                                         (onDeSelect)="onItemDeSelect($event)"
+                                         (onSelectAll)="onSelectAll($event)"
+                                         (onDeSelectAll)="onDeSelectAll()">
+                </ng-multiselect-dropdown>
+
+
+              </div>
+            </div>
+
+          </div>
+          <div>
+
+            <label for="proprietariDTO">Proprietario: <small>(facoltativo)</small></label>
+            <select id="proprietariDTO" formControlName="proprietariDTO">
+
+              <option *ngIf="!oldProp" [value]="null" disabled selected>
+                Scegli un proprietario...
+              </option>
+              <option [value]="null">
+                nessun Proprietario
+              </option>
+              <option *ngIf="oldProp" [value]="serializeProprietario(oldProp)" selected>
+                {{ oldProp.nome }} | {{ oldProp.cognome }}
+              </option>
+              <option *ngFor="let prop of listaProprietari" [value]="serializeProprietario(prop)">
+
+                {{ prop.nome }} {{ prop.cognome }}
+
+              </option>
+            </select>
+          </div>
+          <div class="error" *ngIf="!isValid &&  immobiliForm.get('proprietariDTO')?.invalid">
+            campo è obbligatorio.
+          </div>
+
+          <div class="d-flex flex-row justify-content-evenly">
+            <button type="submit">Modifica</button>
+            <button type="button" (click)="onClose()">Chiudi</button>
+          </div>
+
+        </form>
+
+        <!---->
       </div>
     </div>
-
-    <div>
-      <label for="vani">Vani:</label>
-      <input id="vani" class="styleInputText" type="number" formControlName="vani">
-      <div class="error" *ngIf="!isValid &&  immobiliForm.get('vani')?.invalid ">
-        campo è obbligatorio min 1 vano.
-      </div>
-    </div>
-
-    <div>
-      <label for="costo">Costo:</label>
-      <div class="position-relative">
-        <input id="costo" class="styleInputText" type="number" formControlName="costo">
-        <span class="euro-symbol">€ </span>
-      </div>
-      <div class="error" *ngIf="!isValid &&  immobiliForm.get('costo')?.invalid ">
-        campo è obbligatorio.
-      </div>
-    </div>
-
-    <div>
-      <label for="superfice">Superficie:</label>
-      <div class="position-relative">
-        <input id="superfice" class="styleInputText" type="number" formControlName="superfice">
-        <span class="euro-symbol">m²</span>
-      </div>
-      <div class="error" *ngIf="!isValid &&  immobiliForm.get('superfice')?.invalid ">
-        campo è obbligatorio.
-      </div>
-    </div>
-
-    <div>
-      <label for="anno">anno di costruzione:</label>
-      <input id="anno" class="styleInputText" type="number" formControlName="anno">
-      <div class="error" *ngIf="!isValid &&  immobiliForm.get('anno')?.invalid">
-        campo è obbligatorio.
-      </div>
-    </div>
-    <label>Annessi Disponibili:</label>
-    <div class="d-flex justify-content-center align-items-center">
-      <div class="row box p-0">
-        <div class="col-12">
-          <ng-multiselect-dropdown class="my-custom-multiselect-dropdown"
-                                   [settings]="dropdownSettings"
-                                   [data]="listaAnnessiUnica"
-                                   formControlName="listaAnnessiDTO"
-                                   (onSelect)="onItemSelect($event)"
-                                   (onDeSelect)="onItemDeSelect($event)"
-                                   (onSelectAll)="onSelectAll($event)"
-                                   (onDeSelectAll)="onDeSelectAll()">
-          </ng-multiselect-dropdown>
-
-
-        </div>
-      </div>
-
-    </div>
-    <div>
-
-      <label for="proprietariDTO">Proprietario: <small>(facoltativo)</small></label>
-      <select id="proprietariDTO" formControlName="proprietariDTO">
-
-        <option *ngIf="!oldProp" [value]="null" disabled selected>
-          Scegli un proprietario...
-        </option>
-        <option [value]="null">
-          nessun Proprietario
-        </option>
-        <option *ngIf="oldProp" [value]="serializeProprietario(oldProp)" selected>
-          {{ oldProp.nome }} | {{ oldProp.cognome }}
-        </option>
-        <option *ngFor="let prop of listaProprietari" [value]="serializeProprietario(prop)">
-
-          {{ prop.nome }} {{ prop.cognome }}
-
-        </option>
-      </select>
-    </div>
-    <div class="error" *ngIf="!isValid &&  immobiliForm.get('proprietariDTO')?.invalid">
-      campo è obbligatorio.
-    </div>
-
-    <div class="d-flex flex-row justify-content-evenly">
-      <button type="submit">Modifica</button>
-      <button type="button" (click)="onClose()">Chiudi</button>
-    </div>
-
-  </form>
+  </div>
 
 </dialog>
-<!---->

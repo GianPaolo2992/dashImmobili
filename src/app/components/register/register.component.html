@@ -1,15 +1,61 @@
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="row w-100">
+    <div class="col-md-8 col-lg-6 mx-auto">
 
-<form (submit)="register()">
-  <h2 [ngStyle]="{textAlign:'center', margin:'1em'}">Registrazione</h2>
-  <label>Username:</label>
-  <input class="styleInputText" type="text" [(ngModel)]="user.username" name="username" required />
+      <form [formGroup]="RegisterForm" (ngSubmit)="register()">
+        <h2 [ngStyle]="{textAlign:'center', margin:'1em'}">Registrazione</h2>
+        <label for="username">Username:</label>
+        <input id="username" class="styleInputText" type="text" formControlName="username"/>
 
-  <label>Email:</label>
-  <input class="styleInputText" type="email" [(ngModel)]="user.email" name="email" required />
+        <!--  <input class="styleInputText" type="text" [(ngModel)]="user.username" name="username" required />-->
+        <div *ngIf="RegisterForm?.get('username')?.invalid && !ValidateForm" class="error">
+          ⚠️ Il nome utente deve avere almeno 3 caratteri
+        </div>
 
-  <label>Password:</label>
-  <input class="styleInputText" type="password" [(ngModel)]="user.password" name="password" required />
+        <label for="email">Email:</label>
+        <input id="email" class="styleInputText" type="email" formControlName="email"/>
+        <!--  <input class="styleInputText" type="email" [(ngModel)]="user.email" name="email" required />-->
 
-  <button type="submit">Registrati</button>
-</form>
+        <div *ngIf="RegisterForm?.get('email')?.invalid && !ValidateForm" class="error">
+          ⚠️ l'email è obbligatoria
+        </div>
 
+        <label for="password">Password:</label>
+        <input id="password" class="styleInputText" type="password" formControlName="password"/>
+        <!--  <input class="styleInputText" type="password" [(ngModel)]="user.password" name="password" required />-->
+        <div *ngIf="RegisterForm?.get('password')?.invalid && !ValidateForm" class="error">
+          ⚠️ la password deve contenere ,
+          <ul>
+            <li>8 caratteri</li>
+            <li>una maiuscola</li>
+            <li>una minuscola</li>
+            <li>un carattere speciale ($-!-%-*-?-&)</li>
+          </ul>
+        </div>
+
+        <button type="submit">Registrati</button>
+      </form>
+    </div>
+  </div>
+</div>
+<!--<form (submit)="register()">-->
+<!--    <h2 [ngStyle]="{textAlign:'center', margin:'1em'}">Registrazione</h2>-->
+<!--  <label>Username:</label>-->
+<!--  <input class="styleInputText" type="text" [(ngModel)]="user.username" name="username" required  />-->
+<!--  <div *ngIf="user.username" class="error">-->
+<!--    ⚠️ l'email è obbligatoria-->
+<!--  </div>-->
+
+<!--  <label>Email:</label>-->
+<!--  <input class="styleInputText" type="email" [(ngModel)]="user.email" name="email" required />-->
+<!--  <div *ngIf="user.email" class="error">-->
+<!--    ⚠️ l'email è obbligatoria-->
+<!--  </div>-->
+
+<!--  <label>Password:</label>-->
+<!--  <input class="styleInputText" type="password" [(ngModel)]="user.password" name="password" required />-->
+<!--  <div *ngIf="user.password" class="error">-->
+<!--    ⚠️ l'email è obbligatoria-->
+<!--  </div>-->
+<!--  <button type="submit">Registrati</button>-->
+<!--</form>-->

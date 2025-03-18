@@ -1,56 +1,61 @@
 <dialog #dialog>
+  <div class="container-fluid d-flex justify-content-center align-items-center ">
+    <div class="row w-100">
+      <div class="col-11">
+        <form [formGroup]="annessiUpdateForm" (ngSubmit)="onSubmit()">
 
-  <form [formGroup]="annessiUpdateForm" (ngSubmit)="onSubmit()">
+          <h3 class="text-center">Modifica annesso {{ annesso?.id }}</h3>
+          <div>
+            <label for="tipo">Tipo:</label>
+            <select id="tipo" type="select" formControlName="tipo">
+              <option [value]="annesso?.tipo" disabled selected>{{ annesso?.tipo }}</option>
+              <option *ngFor="let option of annessiOptions" [value]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+            <div class="error" *ngIf="!isValid &&  annessiUpdateForm.get('tipo')?.invalid ">
+              Tipo è obbligatorio.
+            </div>
+          </div>
+          <div>
 
-    <h3 class="text-center">Modifica annesso {{ annesso?.id }}</h3>
-    <div>
-      <label for="tipo">Tipo:</label>
-      <select id="tipo" type="select" formControlName="tipo">
-        <option [value]="annesso?.tipo" disabled selected>{{ annesso?.tipo }}</option>
-        <option *ngFor="let option of annessiOptions" [value]="option.value">
-          {{ option.label }}
-        </option>
-      </select>
-      <div class="error" *ngIf="!isValid &&  annessiUpdateForm.get('tipo')?.invalid ">
-        Tipo è obbligatorio.
+            <label for="superficie">Superficie:</label>
+            <div class="position-relative">
+              <input id="superficie" class="styleInputText" type="number" formControlName="superficie">
+              <span class="euro-symbol">m²</span>
+            </div>
+            <div class="error" *ngIf="!isValid &&  annessiUpdateForm.get('superficie')?.invalid ">
+
+              superficie è obbligatorio.
+            </div>
+
+          </div>
+          <div>
+            <label for="immobileDTO">Immobile: <small>(facoltativo)</small></label>
+            <select id="immobileDTO" formControlName="immobileDTO">
+
+              <option *ngIf="!immobileDTO" [value]="null" disabled selected>
+                Scegli un immobile...
+              </option>
+              <option *ngIf="immobileDTO" [value]="immobileDTO" selected>
+                {{ immobileDTO.tipo }} |
+                prop: {{ immobileDTO.proprietariDTO ? immobileDTO.proprietariDTO.cognome : 'ND' }}
+              </option>
+              <option [value]="null">
+                nessun Immobile
+              </option>
+              <option *ngFor="let immobile of listaImmobili" [value]="serializeImmobile(immobile)">
+                {{ immobile.tipo }} | prop: {{ immobile.proprietariDTO ? immobile.proprietariDTO.cognome : 'ND' }}
+              </option>
+            </select>
+          </div>
+
+          <div class="d-flex flex-row justify-content-evenly">
+            <button type="submit">Modifica</button>
+            <button type="button" (click)="onClose()">Chiudi</button>
+          </div>
+        </form>
       </div>
     </div>
-    <div>
-
-      <label for="superficie">Superficie:</label>
-      <div class="position-relative">
-        <input id="superficie" class="styleInputText" type="number" formControlName="superficie">
-        <span class="euro-symbol">m²</span>
-      </div>
-      <div class="error" *ngIf="!isValid &&  annessiUpdateForm.get('superficie')?.invalid ">
-
-        superficie è obbligatorio.
-      </div>
-
-    </div>
-    <div>
-      <label for="immobileDTO">Immobile: <small>(facoltativo)</small></label>
-      <select id="immobileDTO" formControlName="immobileDTO">
-
-        <option *ngIf="!immobileDTO" [value]="null" disabled selected>
-          Scegli un immobile...
-        </option>
-        <option *ngIf="immobileDTO" [value]="immobileDTO" selected>
-          {{ immobileDTO.tipo }} | prop: {{ immobileDTO.proprietariDTO ? immobileDTO.proprietariDTO.cognome : 'ND' }}
-        </option>
-        <option [value]="null">
-          nessun Immobile
-        </option>
-        <option *ngFor="let immobile of listaImmobili" [value]="serializeImmobile(immobile)">
-          {{ immobile.tipo }} | prop: {{ immobile.proprietariDTO ? immobile.proprietariDTO.cognome : 'ND' }}
-        </option>
-      </select>
-    </div>
-
-    <div class="d-flex flex-row justify-content-evenly">
-      <button type="submit">Modifica</button>
-      <button type="button" (click)="onClose()">Chiudi</button>
-    </div>
-  </form>
-
+  </div>
 </dialog>

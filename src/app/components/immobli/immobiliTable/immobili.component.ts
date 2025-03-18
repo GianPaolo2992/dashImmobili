@@ -1,13 +1,13 @@
 import {Component, inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ImmobileModel} from '../../../models/immobile.model';
 import {ImmobileService} from '../../../services/immobile.service';
-import {CurrencyPipe, NgForOf, NgIf} from '@angular/common';
+import {CurrencyPipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {ProprietarioDialogComponent} from '../../proprietari/proprietario-dialog/proprietario-dialog.component';
 import {ProprietarioModel} from '../../../models/proprietario.model';
 import {AnnessoModel} from '../../../models/annesso.model';
 import {AnnessoDialogComponent} from '../../annessi/annesso-dialog/annesso-dialog.component';
 import {RouterLink} from '@angular/router';
-import {debounceTime, Subscription, switchMap} from 'rxjs';
+import {combineLatest, debounceTime, Subscription, switchMap} from 'rxjs';
 import {ImmobileUpdateFormComponent} from '../immobile-update-form/immobile-update-form.component';
 import {SquareMeterPipe} from '../../../pipes/square-meter.pipe';
 import {AnnessoService} from '../../../services/annesso.service';
@@ -15,6 +15,8 @@ import {ProprietarioService} from '../../../services/proprietario.service';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgxPaginationModule} from 'ngx-pagination';
 import {AuthService} from '../../../services/auth.service';
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+
 
 @Component({
   selector: 'app-immobiliTable',
@@ -29,7 +31,8 @@ import {AuthService} from '../../../services/auth.service';
     FormsModule,
     NgIf,
     ReactiveFormsModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    NgClass
   ],
   templateUrl: './immobili.component.html',
   styleUrl: './immobili.component.css',
@@ -40,6 +43,7 @@ export class ImmobiliComponent implements OnInit, OnDestroy {
   private proprietarioService = inject(ProprietarioService);
   private annessoService = inject(AnnessoService);
   private authService = inject(AuthService);
+  private breakpointObserver = inject(BreakpointObserver);
   private subscription: Subscription = new Subscription();
   @ViewChild(ProprietarioDialogComponent) dialogPropComponent!: ProprietarioDialogComponent;
   @ViewChild(AnnessoDialogComponent) dialogAnnesiComponent!: AnnessoDialogComponent;
@@ -48,21 +52,25 @@ export class ImmobiliComponent implements OnInit, OnDestroy {
   currentPage: number = 1;
   listaImmobili?: ImmobileModel[];
   selectedImmobile?: ImmobileModel;
-immobileDeleted?: ImmobileModel;
+  immobileDeleted?: ImmobileModel;
   searchInput = new FormControl('');
-  errorMessage ='';
-  ngOnInit() {
-    this.subscription.add(
-      this.immobileService.getListaImmobili$().subscribe({
-        next: (data) => {
-          this.listaImmobili = data
-        },
-        error: error => {
-          console.log(error);
-        }
+  errorMessage = '';
 
+  isMobile = false;
+
+  ngOnInit() {
+
+    this.subscription.add(
+      combineLatest([
+        this.immobileService.getListaImmobili$(),  // Chiamata API
+        this.breakpointObserver.observe([Breakpoints.Small, Breakpoints.Handset]) // Controllo viewport
+      ]).subscribe(([immobili, breakpoint]) => {
+        this.listaImmobili = immobili;
+        this.isMobile = breakpoint.matches;
       })
     );
+
+
     this.refreshData();
     this.searchInput.valueChanges
       .pipe(
@@ -102,6 +110,7 @@ immobileDeleted?: ImmobileModel;
   selectImmobile(immobile: ImmobileModel) {
     this.selectedImmobile = immobile;
   }
+
   selectDeleteImmobile(immobile: ImmobileModel) {
     this.immobileDeleted = immobile;
   }

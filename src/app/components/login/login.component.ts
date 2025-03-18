@@ -1,28 +1,40 @@
 import { Component } from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
-import {FormsModule} from '@angular/forms';
-import {NgStyle} from '@angular/common';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {NgIf, NgStyle} from '@angular/common';
 
 @Component({
   selector: 'app-login',
   imports: [
     FormsModule,
-    NgStyle
+    NgStyle,
+    NgIf,
+    ReactiveFormsModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  credentials = {
-    username: '',
-    password: ''
-  };
+  LoginForm: FormGroup = new FormGroup({
+    username : new FormControl("", [Validators.required]),
+    password : new FormControl("", [Validators.required]),
+  }) ;
+  ValidateForm = true;
+  // credentials = {
+  //   username: '',
+  //   password: ''
+  // };
 
   constructor(private authService: AuthService, private router: Router) {}
 
   login(): void {
-    this.authService.login(this.credentials).subscribe({
+    // this.authService.login(this.credentials).subscribe({
+    if (!this.LoginForm.valid) {
+      this.ValidateForm = false;
+      return;
+    }
+    this.authService.login(this.LoginForm.value).subscribe({
       next: (token) => {
         this.authService.saveToken(token);
         alert('Login effettuato!');
