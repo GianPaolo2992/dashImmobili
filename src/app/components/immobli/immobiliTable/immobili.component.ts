@@ -87,6 +87,7 @@ export class ImmobiliComponent implements OnInit, OnDestroy {
   }
 
 
+
   openDialogProp(proprietario: ProprietarioModel | null) {
     this.dialogPropComponent.proprietario = proprietario;
     this.dialogPropComponent.openDialog();

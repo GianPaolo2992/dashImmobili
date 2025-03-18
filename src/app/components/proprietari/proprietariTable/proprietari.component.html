@@ -23,7 +23,7 @@
   'desktop-class': !isMobile
 }">
 
-      <table class="table table-bordered  table-hover ">
+      <table class="table table-bordered  table-hover w-auto ">
           <thead>
           <tr>
             <th scope="col">azioni</th>
@@ -35,11 +35,13 @@
           <tbody>
           <!--      @for(prop of listProp; track prop.id){-->
           <tr *ngFor="let prop of listProp! | paginate: { itemsPerPage: 10, currentPage: currentPage }">
-            <th scope="row" class="d-flex justify-content-evenly">
-              <button class=" btn btn-sm btn-dark" (click)="openDialogUpdate(prop)"><i class="fa-solid fa-pen-nib"
-                                                                               style="color: #fff000;"></i></button>
+            <th scope="row" class="d-flex flex-row justify-content-evenly ">
+              <button class=" btn btn-sm btn-dark" (click)="openDialogUpdate(prop)">
+                <i class="fa-solid fa-pen-nib" style="color: #fff000;"></i>
+              </button>
               <button class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                      (click)="selectDeleteProp(prop)"><i class="fa-solid fa-trash" style="color: #FF0000;"></i>
+                      (click)="selectDeleteProp(prop)">
+                <i class="fa-solid fa-trash" style="color: #FF0000;"></i>
               </button>
 
             </th>
@@ -59,7 +61,7 @@
       </div>
 
       <!--//modale conferma delete-->
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="montserrat-regular modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">

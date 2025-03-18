@@ -18,3 +18,8 @@ header div{
   align-items: center;
 }
 
+h1{
+  font-size: 8vw; /* Il testo si adatta alla larghezza della finestra */
+  color: aliceblue;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
