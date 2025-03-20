@@ -21,6 +21,11 @@ export class LoginComponent {
     password : new FormControl("", [Validators.required]),
   }) ;
   ValidateForm = true;
+  showPassword: boolean = false;
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
   // credentials = {
   //   username: '',
   //   password: ''

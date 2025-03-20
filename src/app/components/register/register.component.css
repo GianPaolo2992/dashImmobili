@@ -25,6 +25,7 @@ label {
 }
 
 .styleInputText {
+  margin-top: 1em;
   border: 1px solid #CCCCCC;
   padding: .5em;
   font-size: 1em;
@@ -38,7 +39,29 @@ label {
 
 }
 
+.password-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
+.password-input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.button-pass-eye {
+  position: absolute;
+  top: 30%;
+  right: 0; /* Puoi regolare questa distanza in base alle tue necessità */
+  transform: translateY(-50%);
+  font-size: 1.2em; /* Puoi regolare la dimensione del simbolo in base alle tue necessità */
+  background: none;
+  border: none;
+  cursor: pointer;
+
+}
 
 
 

@@ -16,8 +16,8 @@
 
       <form [formGroup]="LoginForm" (ngSubmit)="login()">
         <h2 [ngStyle]="{textAlign:'center', margin:'1em'}">Login</h2>
-        <label for="username">Username:</label>
-        <input id="username" class="styleInputText" type="text" formControlName="username"/>
+
+        <input placeholder="Username" class="styleInputText" type="text" formControlName="username"/>
 
         <!--  <input class="styleInputText" type="text" [(ngModel)]="user.username" name="username" required />-->
         <div *ngIf="LoginForm?.get('username')?.invalid && !ValidateForm" class="error">
@@ -25,8 +25,21 @@
         </div>
 
 
-        <label for="password">Password:</label>
-        <input id="password" class="styleInputText" type="password" formControlName="password"/>
+<!--        <label for="password">Password:</label>-->
+<!--        <input id="password" class="styleInputText" type="password" formControlName="password"/>-->
+
+        <div class="password-container">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            type="password"
+            formControlName="password"
+            placeholder="Password"
+            class="password-input styleInputText"
+          />
+          <button type="button" class="button-pass-eye" (click)="togglePasswordVisibility()">
+            <i [class]="!showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'" style="color: dimgrey;"></i>
+          </button>
+        </div>
         <!--  <input class="styleInputText" type="password" [(ngModel)]="user.password" name="password" required />-->
         <div *ngIf="LoginForm?.get('password')?.invalid && !ValidateForm" class="error">
           ⚠️ la password deve essere di 8 caratteri

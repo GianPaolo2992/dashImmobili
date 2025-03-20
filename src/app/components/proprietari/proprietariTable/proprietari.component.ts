@@ -54,14 +54,6 @@ export class ProprietariComponent implements OnInit, OnDestroy {
   currentPage: number = 1;
 
   ngOnInit(): void {
-    // this.subscription.add(
-    //   this.proprietarioService.getListaProprietari$().subscribe({
-    //     next: (props: ProprietarioModel[]) => {
-    //       this.listProp = props;
-    //     },
-    //     error: error => this.errorMessage = error
-    //   })
-    // );
     this.subscription.add(
       combineLatest([
         this.proprietarioService.getListaProprietari$(),  // Chiamata API

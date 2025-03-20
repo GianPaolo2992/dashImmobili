@@ -1,5 +1,8 @@
 <header>
   <div>
-    <h1 >Agenzia Immobiliare</h1>
+    <h1 [ngClass]="{
+  'mobile-class': isMobile,
+  'desktop-class': !isMobile
+}" >Agenzia Immobiliare</h1>
   </div>
 </header>

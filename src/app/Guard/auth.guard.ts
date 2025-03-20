@@ -8,13 +8,23 @@ import { AuthService } from '../services/auth.service';
 export class AuthGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
+  // canActivate(): boolean {
+  //   if (this.authService.getToken()) {
+  //     return true;
+  //   } else {
+  //     this.router.navigate(['/login']);
+  //     return false;
+  //   }
+  // }
   canActivate(): boolean {
-    if (this.authService.getToken()) {
+    if (this.authService.isLoggedIn()) {
       return true;
     } else {
+      this.authService.logout(); // Rimuove il token scaduto
       this.router.navigate(['/login']);
       return false;
     }
   }
+
 }
 
